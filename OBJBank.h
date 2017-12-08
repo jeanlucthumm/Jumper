@@ -7,30 +7,28 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 #include <glm/vec3.hpp>
-#include <unordered_map>
 
 class OBJBank {
 public:
-    typedef int id;
+    typedef size_t refID;
+    class Data;
 
-    static id load(std::string path);
+    static refID load(std::string path);
+    static const Data & get(refID objId);
 
-    static const std::vector<glm::vec3> &vertexData(id objId);
-    static const std::vector<glm::vec3> &faceData(id objId);
-    static const std::vector<glm::vec3> &normalData(id objId);
-
-private:
-    class MapData;
-
-    static std::unordered_map<id, MapData> table;
-
-    class MapData {
+    class Data {
     public:
         std::vector<glm::vec3> vertices;
-        std::vector<glm::vec3> faces;
         std::vector<glm::vec3> normals;
+        std::vector<unsigned int> faces;
+        glm::vec3 max;
+        glm::vec3 min;
     };
+
+private:
+    static std::vector<Data> table;
 };
 
 
