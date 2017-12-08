@@ -8,9 +8,11 @@
 #include <sstream>
 #include <glm/geometric.hpp>
 
+#include "debug.h"
+
 std::vector<OBJBank::Data> OBJBank::table;
 
-const OBJBank::Data & OBJBank::get(refID objId) {
+const OBJBank::Data &OBJBank::get(refID objId) {
     if (table.empty() || objId > table.size() - 1) {
         throw std::runtime_error{"OBJBank could not find objID"};
     }
@@ -18,9 +20,10 @@ const OBJBank::Data & OBJBank::get(refID objId) {
 }
 
 OBJBank::refID OBJBank::load(std::string path) {
-    std::ifstream in{path, std::ios::in};
+    std::ifstream in{path};
     if (!in.is_open()) {
-        std::cerr << "Could not open file: " << path << std::endl;
+        std::cerr << "Could not open file: " << path
+                  << ": " << std::strerror(errno) << std::endl;
         return 0;
     }
     Data data{};
@@ -76,8 +79,8 @@ OBJBank::refID OBJBank::load(std::string path) {
                 auto index = static_cast<unsigned int>(std::stoi(indexStr));
                 auto normal = static_cast<unsigned int>(std::stoi(normalStr));
 
-                data.faces.push_back(index);
-                data.normals[index] = tempNormals[normal];
+                data.faces.push_back(index - 1);
+                data.normals[index - 1] = tempNormals[normal - 1];
             }
         }
     }
@@ -89,6 +92,10 @@ OBJBank::refID OBJBank::load(std::string path) {
     std::cout << data.vertices.size() << " vertices ";
     std::cout << data.normals.size() << " normals ";
     std::cout << data.faces.size() << " indices " << std::endl;
+
+    for (int j = 0; j < 30; ++j) {
+        cout << glm::to_string(data.vertices[j]) << endl;
+    }
 
     table.push_back(std::move(data));
     return table.size() - 1;

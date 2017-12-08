@@ -4,6 +4,8 @@
 
 #include "Window.h"
 #include "util.h"
+#include "OBJBank.h"
+#include "Geometry.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -311,37 +313,6 @@ Window::~Window() {
     glfwTerminate();
 }
 
-Window::Window(int width, int height)
-        : width{width}, height{height}, orbitFlag{false}, transFlag{false}, dragFlag{false},
-          started{false}, selected{nullptr},
-          cam{
-                  glm::vec3{0.0f, 0.0f, 30.0f},
-                  glm::vec3{0.0f, 0.0f, 0.0f},
-                  glm::vec3{0.0f, 1.0f, 0.0f}
-          } {
-    instance = this;
-    glfwWindow = makeGLFWWindow(width, height);
-    if (!glfwWindow) throw std::runtime_error{"Could not make GLFW window"};
-    setOpenGLPrefs();
-    registerHandlers(glfwWindow);
-
-
-    auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
-
-    skybox = std::make_unique<CubeMap>(
-            std::vector<std::string>{
-                    "right.jpg",
-                    "left.jpg",
-                    "top.jpg",
-                    "bottom.jpg",
-                    "back.jpg",
-                    "front.jpg"
-            },
-            "skybox/",
-            cubeMapShader
-    );
-}
-
 const glm::mat4 &Window::View() {
     return cam.viewMatrix();
 }
@@ -366,3 +337,38 @@ void Window::subscribe(int key, EventListener *listener) {
     }
 }
 
+Window::Window(int width, int height)
+        : width{width}, height{height}, orbitFlag{false}, transFlag{false}, dragFlag{false},
+          started{false}, selected{nullptr},
+          cam{
+                  glm::vec3{0.0f, 0.0f, 30.0f},
+                  glm::vec3{0.0f, 0.0f, 0.0f},
+                  glm::vec3{0.0f, 1.0f, 0.0f}
+          } {
+    instance = this;
+    glfwWindow = makeGLFWWindow(width, height);
+    if (!glfwWindow) throw std::runtime_error{"Could not make GLFW window"};
+    setOpenGLPrefs();
+    registerHandlers(glfwWindow);
+
+
+    auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
+    auto normalShader = std::make_shared<Shader>("shader/normal.vert", "shader/normal.frag");
+
+    skybox = std::make_unique<CubeMap>(
+            std::vector<std::string>{
+                    "right.jpg",
+                    "left.jpg",
+                    "top.jpg",
+                    "bottom.jpg",
+                    "back.jpg",
+                    "front.jpg"
+            },
+            "skybox/",
+            cubeMapShader
+    );
+
+    OBJBank::refID bunnyID = OBJBank::load("obj/Jeep.obj");
+    graph.addChild(new Geometry{bunnyID, normalShader});
+    graph.scale(glm::vec3{4.0});
+}

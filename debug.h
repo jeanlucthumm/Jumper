@@ -7,6 +7,7 @@
 
 #include "util.h"
 #include <iostream>
+#include <glm/ext.hpp>
 
 using namespace std;
 

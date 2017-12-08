@@ -5,12 +5,13 @@
 #include "Node.h"
 #include "Material.h"
 #include "Shader.h"
+#include "OBJBank.h"
 #include <vector>
 #include <memory>
 
 class Geometry : public Node {
 public:
-    Geometry(std::string objPath, std::shared_ptr<Shader> shader);
+    Geometry(OBJBank::refID dataID, std::shared_ptr<Shader> shader);
 
     void draw(const glm::mat4 &parent,
               const glm::mat4 &view,
@@ -21,16 +22,12 @@ public:
     std::list<Node *> hit(const Ray &ray) override;
 
 private:
-    std::vector<unsigned int> indices;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> normals;
-
     GLuint VAO, EBO, VVBO, NVBO;
+    OBJBank::refID dataID;
+    const OBJBank::Data &data;
 
     glm::mat4 base;
     std::shared_ptr<Shader> shader;
-
-    bool parse(const std::string &path);
 };
 
 #endif // GEOMETRY_H
