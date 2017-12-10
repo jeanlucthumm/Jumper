@@ -6,7 +6,9 @@
 #define PA2_MATERIAL_H
 
 
+#include "Shader.h"
 #include <glm/vec3.hpp>
+#include <memory>
 
 struct Material {
 public:
@@ -14,6 +16,8 @@ public:
     glm::vec3 kd;
     glm::vec3 ks;
     float shiny;
+
+    void use(std::shared_ptr<Shader> &shader);
 };
 
 
