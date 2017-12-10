@@ -4,7 +4,7 @@
 
 #include "PointLight.hpp"
 
-PointLight::PointLight(OBJBank::refID objID, std::shared_ptr<Shader> shader,
+PointLight::PointLight(MeshBank::refID objID, std::shared_ptr<Shader> shader,
                        std::shared_ptr<Material> material, unsigned int shaderArrayPos,
                        float constant, float linear, float quadratic,
                        glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)

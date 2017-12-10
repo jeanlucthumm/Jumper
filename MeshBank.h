@@ -10,7 +10,7 @@
 #include <utility>
 #include <glm/vec3.hpp>
 
-class OBJBank {
+class MeshBank {
 public:
     typedef size_t refID;
     class Data;

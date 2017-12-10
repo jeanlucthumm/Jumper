@@ -4,7 +4,7 @@
 
 #include "Window.h"
 #include "util.h"
-#include "OBJBank.h"
+#include "MeshBank.h"
 #include "Geometry.h"
 #include "DirLight.hpp"
 #include "PointLight.hpp"
@@ -387,8 +387,8 @@ Window::Window(int width, int height)
             cubeMapShader
     );
 
-    OBJBank::refID carID = OBJBank::load("obj/sphere.obj");
-    OBJBank::refID sphereID = OBJBank::load("obj/sphere.obj");
+    MeshBank::refID carID = MeshBank::load("obj/sphere.obj");
+    MeshBank::refID sphereID = MeshBank::load("obj/sphere.obj");
 
 
     auto *dirLight = new DirLight{

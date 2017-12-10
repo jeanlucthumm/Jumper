@@ -2,7 +2,7 @@
 // Created by Jean-Luc Thumm on 12/7/17.
 //
 
-#include "OBJBank.h"
+#include "MeshBank.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -10,16 +10,16 @@
 
 #include "debug.h"
 
-std::vector<OBJBank::Data> OBJBank::table;
+std::vector<MeshBank::Data> MeshBank::table;
 
-const OBJBank::Data &OBJBank::get(refID objId) {
+const MeshBank::Data &MeshBank::get(refID objId) {
     if (table.empty() || objId > table.size() - 1) {
         throw std::runtime_error{"OBJBank could not find objID"};
     }
     return table[objId];
 }
 
-OBJBank::refID OBJBank::load(std::string path) {
+MeshBank::refID MeshBank::load(std::string path) {
     std::ifstream in{path};
     if (!in.is_open()) {
         std::cerr << "Could not open file: " << path

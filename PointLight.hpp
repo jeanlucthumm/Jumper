@@ -12,7 +12,7 @@
 
 class PointLight : public Geometry {
 public:
-    PointLight(OBJBank::refID objID,
+    PointLight(MeshBank::refID objID,
                std::shared_ptr<Shader> shader,
                std::shared_ptr<Material> material,
                unsigned int shaderArrayPos,

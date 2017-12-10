@@ -16,6 +16,7 @@ struct Material {
 public:
     Material() : hasKaMap{false}, hasKdMap{false} {}
 
+    std::string name;
     glm::vec3 ka;
     glm::vec3 kd;
     glm::vec3 ks;

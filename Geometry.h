@@ -5,13 +5,13 @@
 #include "Node.h"
 #include "Material.h"
 #include "Shader.h"
-#include "OBJBank.h"
+#include "MeshBank.h"
 #include <vector>
 #include <memory>
 
 class Geometry : public Node {
 public:
-    Geometry(OBJBank::refID dataID, std::shared_ptr<Shader> shader,
+    Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader,
                  std::shared_ptr<Material> material);
 
     void draw(const glm::mat4 &parent,
@@ -24,8 +24,8 @@ public:
 
 private:
     GLuint VAO, EBO, VVBO, NVBO;
-    OBJBank::refID dataID;
-    const OBJBank::Data &data;
+    MeshBank::refID dataID;
+    const MeshBank::Data &data;
 
     glm::mat4 base;
     std::shared_ptr<Shader> shader;
