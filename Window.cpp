@@ -357,6 +357,12 @@ Window::Window(int width, int height)
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
                                                        "shader/material_only.frag");
 
+    Material copperMaterial;
+    copperMaterial.ka = glm::vec3{0.19125, 0.0735, 0.0225};
+    copperMaterial.kd = glm::vec3{0.780392, 0.568627, 0.113725};
+    copperMaterial.ks = glm::vec3{0.25677, 0.137622, 0.086014};
+    copperMaterial.shiny = 0.1;
+
     skybox = std::make_unique<CubeMap>(
             std::vector<std::string>{
                     "right.jpg",

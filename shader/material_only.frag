@@ -5,7 +5,7 @@ out vec4 color;
 in vec3 Normal;
 in vec3 Position;
 
-struct dirLight {
+struct DirLight {
     vec3 direction;
 
     vec3 ambient;
@@ -14,11 +14,20 @@ struct dirLight {
 };
 
 #define DIRLIGHT_COUNT 1
-uniform dirLight dirLights[DIRLIGHT_COUNT];
+uniform DirLight dirLights[DIRLIGHT_COUNT];
 
-uniform cameraPos;
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shiny;
+};
 
-vec3 computeDirLight(dirLight light, vec3 normal, vec3 viewDir) {
+uniform Material material;
+
+uniform vec3 cameraPos;
+
+vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(-light.direction);
 
     // diffuse
@@ -26,11 +35,15 @@ vec3 computeDirLight(dirLight light, vec3 normal, vec3 viewDir) {
 
     // specular
     vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiny);
 
-    vec3 ambient = light.ambient * vec3(texture2D(material.diffuse, TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture2D(material.diffuse, TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture2D(material.specular, TexCoords));
+//    vec3 ambient = light.ambient * vec3(texture2D(material.diffuse, TexCoords));
+//    vec3 diffuse = light.diffuse * diff * vec3(texture2D(material.diffuse, TexCoords));
+//    vec3 specular = light.specular * spec * vec3(texture2D(material.specular, TexCoords));
+
+    vec3 ambient = light.ambient * material.ambient;
+    vec3 diffuse = light.diffuse * diff * material.diffuse;
+    vec3 specular = light.specular * spec * material.specular;
 
     return (ambient + diffuse + specular);
 }
