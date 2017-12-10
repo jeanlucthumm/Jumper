@@ -22,7 +22,7 @@ struct OBJElement {
     std::vector<glm::vec3> vertices;
     std::vector<glm::vec3> uvs;
     std::vector<glm::vec3> normals;
-    std::vector<glm::vec3> indices;
+    std::vector<unsigned long> indices;
 
     glm::vec3 max;
     glm::vec3 min;
