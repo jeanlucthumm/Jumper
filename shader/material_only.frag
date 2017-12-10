@@ -13,7 +13,7 @@ struct dirLight {
     vec3 specular;
 };
 
-#define DIRLIGHT_COUNT = 1
+#define DIRLIGHT_COUNT 1
 uniform dirLight dirLights[DIRLIGHT_COUNT];
 
 uniform cameraPos;

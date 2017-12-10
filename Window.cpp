@@ -6,6 +6,7 @@
 #include "util.h"
 #include "OBJBank.h"
 #include "Geometry.h"
+#include "DirLight.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -352,7 +353,9 @@ Window::Window(int width, int height)
 
 
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
-    auto normalShader = std::make_shared<Shader>("shader/normal.vert", "shader/normal.frag");
+//    auto normalShader = std::make_shared<Shader>("shader/normal.vert", "shader/normal.frag");
+    auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
+                                                       "shader/material_only.frag");
 
     skybox = std::make_unique<CubeMap>(
             std::vector<std::string>{
@@ -367,8 +370,16 @@ Window::Window(int width, int height)
             cubeMapShader
     );
 
-    OBJBank::refID bunnyID = OBJBank::load("obj/jeep.obj");
-    graph.addChild(new Geometry{bunnyID, normalShader});
-    graph.scale(glm::vec3{4.0});
-//    graph.translate(glm::vec3{0, 0, -600.0f});
+    OBJBank::refID carID = OBJBank::load("obj/jeep.obj");
+    Geometry *car = new Geometry{carID, materialOnlyShader};
+
+    auto *dirLight = new DirLight{
+            glm::vec3{1.0, -1.0, -0.2},
+            glm::vec3{0.5, 0.5, 0.5},
+            0
+    };
+    dirLight->attach(materialOnlyShader);
+
+    graph.addChild(dirLight);
+    graph.addChild(car);
 }
