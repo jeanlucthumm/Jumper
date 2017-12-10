@@ -12,7 +12,7 @@
 
 class MaterialBank {
 public:
-    static const MaterialBank *I();
+    static MaterialBank * I();
 
     MaterialBank();
 

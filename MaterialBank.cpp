@@ -9,7 +9,7 @@
 
 MaterialBank *MaterialBank::instance;
 
-const MaterialBank *MaterialBank::I() {
+MaterialBank * MaterialBank::I() {
     return instance;
 }
 
