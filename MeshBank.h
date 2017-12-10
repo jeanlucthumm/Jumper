@@ -26,6 +26,8 @@ public:
 private:
     static MeshBank *instance;
 
+    bool put(OBJElement &element);
+
     std::vector<std::vector<const OBJElement>> table;
 };
 

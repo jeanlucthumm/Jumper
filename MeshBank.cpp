@@ -46,7 +46,7 @@ MeshBank::refID MeshBank::load(std::string path) {
     std::vector<glm::vec3> tempUvs;
     std::vector<std::string> splitRes;    // face line tokens
 
-    const OBJElement element;
+    OBJElement element;
 
     while (getline(in, line)) {
         std::stringstream ss{line};
@@ -62,7 +62,14 @@ MeshBank::refID MeshBank::load(std::string path) {
             }
         }
         else if (token == "o") {
-//            table.push_back(element);
+            if (put(element)) {
+                element.min = glm::vec3{minX, minY, minZ};
+                element.max = glm::vec3{maxX, maxY, maxZ};
+                table.push_back(element);
+            }
+
+            element = OBJElement{};
+            element.material = MaterialBank::I()->get("default");
         }
         else if (token == "v") {
             ss >> x;
@@ -133,3 +140,12 @@ MeshBank::refID MeshBank::load(std::string path) {
     table.push_back(std::move(element));
     return table.size() - 1;
 }
+
+MeshBank *MeshBank::I() {
+    return instance;
+}
+
+MeshBank::MeshBank() {
+    instance = this;
+}
+
