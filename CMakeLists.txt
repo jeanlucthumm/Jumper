@@ -10,6 +10,7 @@ find_package(PkgConfig)
 pkg_search_module(GLFW REQUIRED glfw3)
 
 file(GLOB SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/*.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 set(STB_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/lib/stb_image.h
