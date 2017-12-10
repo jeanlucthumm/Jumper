@@ -7,14 +7,12 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "Transform.h"
-#include "debug.h"
 
 class Mover : public Transform {
 public:
     void update() override {
         Transform::update();
-        cout << "Update" << endl;// DEBUG
-        M = glm::rotate(M, glm::radians(1.0f), glm::vec3{0, 0, 1});
+        translate(glm::vec3(-0.01f, 0.00f, 0.0f));
     }
 };
 

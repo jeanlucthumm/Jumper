@@ -13,6 +13,7 @@
 #include <iostream>
 #include <glm/ext.hpp>
 
+
 using std::cerr;
 using std::endl;
 using std::cout;
@@ -270,7 +271,8 @@ void Window::setOpenGLPrefs() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    glClearColor(0.05f, 0.8f, 0.85f, 1.0f);
+//    glClearColor(0.05f, 0.8f, 0.85f, 1.0f);
+    glClearColor(0, 0, 0, 1);
 
     glEnable(GL_LINE_SMOOTH);
     glLineWidth(1.0);
@@ -281,7 +283,7 @@ void Window::setOpenGLPrefs() {
 void Window::display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    skybox->draw(cam.viewMatrix(), projection);
+//    skybox->draw(cam.viewMatrix(), projection);
     graph.draw(glm::mat4{}, cam.viewMatrix(), projection);
 
     glfwPollEvents();
@@ -395,20 +397,22 @@ Window::Window(int width, int height)
             0
     };
     dirLight->attach(materialOnlyShader);
-    graph.addChild(dirLight);
+//    graph.addChild(dirLight);
 
     auto *pointLight = new PointLight{
             sphereID, lightShader, lightMaterial, 0,
-            0.3, 0.0, 0.0,
+            0.0, 0.25, 0.0,
             glm::vec3{0.2, 0.2, 0.2},
             glm::vec3{0.2, 0.2, 0.2},
             glm::vec3{0.2, 0.2, 0.2},
     };
     pointLight->attach(materialOnlyShader);
 
+
+
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
-    trans->translate(glm::vec3{2, 0, 0});
+    trans->translate(glm::vec3{10, 0, 0});
     trans->addChild(pointLight);
     graph.addChild(trans);
 
