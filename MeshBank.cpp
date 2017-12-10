@@ -4,6 +4,7 @@
 
 #include "MeshBank.h"
 #include "MaterialBank.hpp"
+#include "util.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -147,5 +148,53 @@ MeshBank *MeshBank::I() {
 
 MeshBank::MeshBank() {
     instance = this;
+}
+
+bool MeshBank::put(OBJElement &element) {
+    GLuint EBO, vertexVBO, normalVBO, uvVBO;
+
+    glGenVertexArrays(1, &element.VAO);
+    glGenBuffers(1, &EBO);
+    glGenBuffers(1, &vertexVBO);
+    glGenBuffers(1, &normalVBO);
+    glGenBuffers(1, &uvVBO);
+
+    auto vsize = static_cast<GLsizeiptr>(element.vertices.size()) * sizeof(glm::vec3);
+    auto nsize = static_cast<GLsizeiptr>(element.normals.size()) * sizeof(glm::vec3);
+    auto usize = static_cast<GLsizeiptr>(element.uvs.size()) * sizeof(glm::vec2);
+    auto esize = static_cast<GLsizeiptr>(element.indices.size()) * sizeof(glm::vec3);
+
+    glBindVertexArray(element.VAO);
+
+    // positions
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+    glBufferData(GL_ARRAY_BUFFER, vsize, &element.vertices[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+
+    // normals
+    glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
+    glBufferData(GL_ARRAY_BUFFER, nsize, &element.normals[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+
+    // uvs
+    glBindBuffer(GL_ARRAY_BUFFER, uvVBO);
+    glBufferData(GL_ARRAY_BUFFER, usize, &element.uvs[0], GL_STATIC_DRAW);
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
+
+    // indices
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, esize, &element.indices[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    auto error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cerr << "Error when loading obj element: "
+                  << util::error_string(error) << std::endl;
+        return false;
+    }
+    return true;
 }
 
