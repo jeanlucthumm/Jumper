@@ -12,6 +12,8 @@
 
 class OBJElement {
 public:
+    OBJElement() : VAO{0} {}
+
     GLuint VAO;
     std::shared_ptr<const Material> material;
     std::string name;

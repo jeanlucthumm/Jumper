@@ -14,13 +14,15 @@
 
 struct Material {
 public:
+    Material() : hasKaMap{false}, hasKdMap{false} {}
+
     glm::vec3 ka;
     glm::vec3 kd;
     glm::vec3 ks;
-    float shiny;
+    float shiny{};
 
-    GLuint kaMap;
-    GLuint kdMap;
+    GLuint kaMap{};
+    GLuint kdMap{};
     bool hasKaMap;
     bool hasKdMap;
     std::string kaMapPath;
