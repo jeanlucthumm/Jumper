@@ -28,6 +28,7 @@ public:
               const glm::mat4 &projection) override;
     void update() override;
     std::list<Node *> hit(const Ray &ray) override;
+
 private:
     float constant, linear, quadratic;
     glm::vec3 ambient, diffuse, specular;

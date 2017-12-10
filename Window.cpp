@@ -354,7 +354,7 @@ Window::Window(int width, int height)
 
 
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
-    auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag")
+    auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
                                                        "shader/material_only.frag");
 
@@ -385,7 +385,9 @@ Window::Window(int width, int height)
     );
 
     OBJBank::refID carID = OBJBank::load("obj/truck.obj");
-    OBJBank::refID sphereID = OBJBank::load("sphere.obj");
+    OBJBank::refID sphereID = OBJBank::load("obj/sphere.obj");
+
+    cout << carID << " " << sphereID << endl; // DEBUG
 
     Geometry *car = new Geometry{carID, materialOnlyShader, copperMaterial};
 
@@ -403,10 +405,11 @@ Window::Window(int width, int height)
             glm::vec3{0.8, 0.8, 0.8},
             glm::vec3{0.8, 0.8, 0.8},
     };
+    pointLight->attach(materialOnlyShader);
 
     auto trans = new Transform;
-    trans->scale(glm::vec3{0.3});
-    trans->translate(glm::vec3{4, 0, 0});
+    trans->scale(glm::vec3{0.03});
+    trans->translate(glm::vec3{2, 0, 0});
     trans->addChild(pointLight);
 
     graph.addChild(dirLight);
