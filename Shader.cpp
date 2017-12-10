@@ -107,24 +107,24 @@ GLuint Shader::compile(std::string vertex_file_path, std::string fragment_file_p
     return program;
 }
 
-void Shader::put(const char *tag, float value) {
-    glUniform1f(glGetUniformLocation(id, tag), value);
+void Shader::put(const std::string &tag, float value) {
+    glUniform1f(glGetUniformLocation(id, tag.c_str()), value);
 }
 
-void Shader::put(const char *tag, int value) {
-    glUniform1i(glGetUniformLocation(id, tag), value);
+void Shader::put(const std::string &tag, int value) {
+    glUniform1i(glGetUniformLocation(id, tag.c_str()), value);
 }
 
-void Shader::put(const char *tag, const glm::vec3 &value) {
-    glUniform3f(glGetUniformLocation(id, tag), value.x, value.y, value.z);
+void Shader::put(const std::string &tag, const glm::vec3 &value) {
+    glUniform3f(glGetUniformLocation(id, tag.c_str()), value.x, value.y, value.z);
 }
 
-void Shader::put(const char *tag, const glm::vec4 &value) {
-    glUniform4f(glGetUniformLocation(id, tag), value.x, value.y, value.z, value.w);
+void Shader::put(const std::string &tag, const glm::vec4 &value) {
+    glUniform4f(glGetUniformLocation(id, tag.c_str()), value.x, value.y, value.z, value.w);
 }
 
-void Shader::put(const char *tag, const glm::mat4 &value) {
-    glUniformMatrix4fv(glGetUniformLocation(id, tag), 1, GL_FALSE, &value[0][0]);
+void Shader::put(const std::string &tag, const glm::mat4 &value) {
+    glUniformMatrix4fv(glGetUniformLocation(id, tag.c_str()), 1, GL_FALSE, &value[0][0]);
 }
 
 void Shader::use() {

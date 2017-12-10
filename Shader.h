@@ -22,11 +22,11 @@ public:
 
     void use();
 
-    void put(const char *tag, float value);
-    void put(const char *tag, int value);
-    void put(const char *tag, const glm::vec3 &value);
-    void put(const char *tag, const glm::vec4 &value);
-    void put(const char *tag, const glm::mat4 &value);
+    void put(const std::string &tag, float value);
+    void put(const std::string &tag, int value);
+    void put(const std::string &tag, const glm::vec3 &value);
+    void put(const std::string &tag, const glm::vec4 &value);
+    void put(const std::string &tag, const glm::mat4 &value);
 
 private:
     GLuint id;
