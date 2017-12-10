@@ -7,6 +7,7 @@
 #include "OBJBank.h"
 #include "Geometry.h"
 #include "DirLight.hpp"
+#include "PointLight.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -353,7 +354,7 @@ Window::Window(int width, int height)
 
 
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
-//    auto normalShader = std::make_shared<Shader>("shader/normal.vert", "shader/normal.frag");
+    auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag")
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
                                                        "shader/material_only.frag");
 
@@ -363,6 +364,11 @@ Window::Window(int width, int height)
     copperData->ks = glm::vec3{0.25677, 0.137622, 0.086014};
     copperData->shiny = 0.1;
     std::shared_ptr<Material> copperMaterial{copperData};
+
+    auto *lightData = new Material;
+    lightData->ka = glm::vec3{1.0, 1.0, 1.0};
+    std::shared_ptr<Material> lightMaterial{lightData};
+
 
 
     skybox = std::make_unique<CubeMap>(
@@ -379,6 +385,8 @@ Window::Window(int width, int height)
     );
 
     OBJBank::refID carID = OBJBank::load("obj/truck.obj");
+    OBJBank::refID sphereID = OBJBank::load("sphere.obj");
+
     Geometry *car = new Geometry{carID, materialOnlyShader, copperMaterial};
 
     auto *dirLight = new DirLight{
@@ -388,6 +396,20 @@ Window::Window(int width, int height)
     };
     dirLight->attach(materialOnlyShader);
 
+    auto *pointLight = new PointLight{
+            sphereID, lightShader, lightMaterial, 0,
+            0.09, 0.0, 0.0,
+            glm::vec3{0.8, 0.8, 0.8},
+            glm::vec3{0.8, 0.8, 0.8},
+            glm::vec3{0.8, 0.8, 0.8},
+    };
+
+    auto trans = new Transform;
+    trans->scale(glm::vec3{0.3});
+    trans->translate(glm::vec3{4, 0, 0});
+    trans->addChild(pointLight);
+
     graph.addChild(dirLight);
     graph.addChild(car);
+    graph.addChild(trans);
 }
