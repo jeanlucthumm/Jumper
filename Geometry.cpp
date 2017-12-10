@@ -7,8 +7,10 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/ext.hpp>
 
-Geometry::Geometry(OBJBank::refID dataID, std::shared_ptr<Shader> shader)
-        : shader{std::move(shader)}, dataID{dataID}, data{OBJBank::get(dataID)} {
+Geometry::Geometry(OBJBank::refID dataID, std::shared_ptr<Shader> shader,
+                   std::shared_ptr<Material> material)
+        : shader{std::move(shader)}, dataID{dataID},
+          data{OBJBank::get(dataID)}, material{std::move(material)} {
 
     // base matrix calculation
     glm::vec3 center = (data.max + data.min) / 2.0f;
