@@ -3,16 +3,20 @@
 //
 
 #include "MeshBank.h"
+#include "MaterialBank.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <glm/geometric.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
-#include "debug.h"
+namespace fs = boost::filesystem;
+namespace alg = boost::algorithm;
 
-std::vector<MeshBank::Data> MeshBank::table;
+std::vector<const OBJElement> MeshBank::table;
 
-const MeshBank::Data &MeshBank::get(refID objId) {
+const std::vector<const OBJElement> &MeshBank::get(refID objId) {
     if (table.empty() || objId > table.size() - 1) {
         throw std::runtime_error{"OBJBank could not find objID"};
     }
@@ -26,12 +30,12 @@ MeshBank::refID MeshBank::load(std::string path) {
                   << ": " << std::strerror(errno) << std::endl;
         return 0;
     }
-    Data data{};
+    fs::path bpath{fs::path{path}.parent_path()};
 
-    std::string line, next;
-    std::string id;
+    std::vector<const OBJElement> object;
+
+    std::string line, token;
     float x, y, z;
-    std::string f; // face line token
 
     float minX, minY, minZ;
     float maxX, maxY, maxZ;
@@ -39,13 +43,28 @@ MeshBank::refID MeshBank::load(std::string path) {
     maxX = maxY = maxZ = std::numeric_limits<float>::min();
 
     std::vector<glm::vec3> tempNormals;
-    std::vector<std::string> fs;    // face line tokens
+    std::vector<glm::vec3> tempUvs;
+    std::vector<std::string> splitRes;    // face line tokens
+
+    const OBJElement element;
 
     while (getline(in, line)) {
         std::stringstream ss{line};
-        ss >> id;
+        ss >> token;
 
-        if (id == "v") {
+        // TODO handle case of no 'o' command
+
+        if (token == "mtllib") {
+            ss >> token;
+            fs::path p = bpath / fs::path{token};
+            if (!MaterialBank::I()->parse(p.string())) {
+                std::cerr << "Could not parse mtllib:" << p.string() << std::endl;
+            }
+        }
+        else if (token == "o") {
+//            table.push_back(element);
+        }
+        else if (token == "v") {
             ss >> x;
             ss >> y;
             ss >> z;
@@ -57,9 +76,9 @@ MeshBank::refID MeshBank::load(std::string path) {
             if (z < minZ) minZ = z;
             else if (z > maxZ) maxZ = z;
 
-            data.vertices.emplace_back(x, y, z);
+            element.vertices.emplace_back(x, y, z);
         }
-        else if (id == "vn") {
+        else if (token == "vn") {
             ss >> x;
             ss >> y;
             ss >> z;
@@ -67,33 +86,50 @@ MeshBank::refID MeshBank::load(std::string path) {
 
             tempNormals.push_back(glm::normalize(normal));
         }
-        else if (id == "f") {
-            // make sure we can align normals with vertices
-            if (data.normals.size() < data.vertices.size()) {
-                data.normals.resize(data.vertices.size());
+        else if (token == "f") {
+            // make sure we have enough room to align
+            if (element.normals.size() < element.vertices.size()) {
+                element.normals.resize(element.vertices.size());
             }
-            for (int i = 0; i < 3; i++) {
-                ss >> f;
-                size_t sep = f.find("//");
-                std::string indexStr = f.substr(0, sep);
-                std::string normalStr = f.substr(sep + 2, f.length());
-                auto index = static_cast<unsigned int>(std::stoi(indexStr));
-                auto normal = static_cast<unsigned int>(std::stoi(normalStr));
+            if (element.uvs.size() < element.uvs.size()) {
+                element.uvs.resize(element.vertices.size());
+            }
 
-                data.faces.push_back(index - 1);
-                data.normals[index - 1] = tempNormals[normal - 1];
+            for (int i = 0; i < 3; i++) {
+                // split by /
+                ss >> token;
+                splitRes.clear();
+                alg::split(splitRes, token, alg::is_any_of("/"));
+                if (splitRes.size() != 3) continue; // f xx/xx/xx
+
+                // populate arrays
+                unsigned long index = std::stoul(splitRes[0]) - 1;
+                element.indices.push_back(index);
+                if (!splitRes[1].empty()) {
+                    unsigned long uvIndex = std::stoul(splitRes[1]) - 1;
+                    element.uvs[index] = tempUvs[uvIndex];
+                }
+                if (!splitRes[2].empty()) {
+                    unsigned long normIndex = std::stoul(splitRes[2]) - 1;
+                    element.normals[index] = tempNormals[normIndex];
+                }
             }
+
+            // check for ngon
+            if (!ss.eof()) {
+                std::cerr << "Found ngon in file: " << path;
+                std::cerr << ": " << line << std::endl;
+            }
+        }
+        else if (token == "usemtl") {
+            ss >> token;
+            element.material = MaterialBank::I()->get(token);
         }
     }
 
-    data.max = glm::vec3{maxX, maxY, maxZ};
-    data.min = glm::vec3{minX, minY, minZ};
+    element.max = glm::vec3{maxX, maxY, maxZ};
+    element.min = glm::vec3{minX, minY, minZ};
 
-    std::cout << "=> Loaded " << path << " : ";
-    std::cout << data.vertices.size() << " vertices ";
-    std::cout << data.normals.size() << " normals ";
-    std::cout << data.faces.size() << " indices " << std::endl;
-
-    table.push_back(std::move(data));
+    table.push_back(std::move(element));
     return table.size() - 1;
 }

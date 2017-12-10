@@ -5,6 +5,8 @@
 #ifndef JUMPER_OBJBANK_H
 #define JUMPER_OBJBANK_H
 
+#include "GLinclude.h"
+#include "OBJElement.hpp"
 #include <string>
 #include <vector>
 #include <utility>
@@ -13,22 +15,18 @@
 class MeshBank {
 public:
     typedef size_t refID;
-    class Data;
 
-    static refID load(std::string path);
-    static const Data & get(refID objId);
+    static MeshBank *I();
 
-    class Data {
-    public:
-        std::vector<glm::vec3> vertices;
-        std::vector<glm::vec3> normals;
-        std::vector<unsigned int> faces;
-        glm::vec3 max;
-        glm::vec3 min;
-    };
+    MeshBank();
+
+    refID load(std::string path);
+    const std::vector<const OBJElement> &get(refID id);
 
 private:
-    static std::vector<Data> table;
+    static MeshBank *instance;
+
+    std::vector<std::vector<const OBJElement>> table;
 };
 
 
