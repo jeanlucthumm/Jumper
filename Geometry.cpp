@@ -62,6 +62,8 @@ void Geometry::draw(const glm::mat4 &parent,
     shader->put("projection", projection);
     shader->put("cameraPos", Window::Instance().CameraPos());
 
+    material->putYourself(shader);
+
     glBindVertexArray(VAO);
     glBindTexture(GL_TEXTURE_CUBE_MAP, Window::Instance().SkyboxTexture());
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(data.faces.size()),

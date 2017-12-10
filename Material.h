@@ -17,7 +17,7 @@ public:
     glm::vec3 ks;
     float shiny;
 
-    void use(std::shared_ptr<Shader> &shader);
+    void putYourself(std::shared_ptr<Shader> &shader);
 };
 
 
