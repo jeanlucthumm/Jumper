@@ -14,8 +14,6 @@ MaterialBank * MaterialBank::I() {
 }
 
 MaterialBank::MaterialBank() {
-    instance = this;
-
     // insert default material
     auto *material = new Material;
     material->ka = glm::vec3{0.19125, 0.0735, 0.0225};
@@ -125,4 +123,13 @@ bool MaterialBank::store(Material material) {
 
 GLuint MaterialBank::putTexture(const std::string &path) {
     return 5;
+}
+
+void MaterialBank::instantiate() {
+    if (instance) free();
+    instance = new MaterialBank();
+}
+
+void MaterialBank::free() {
+    delete instance;
 }

@@ -146,10 +146,6 @@ MeshBank *MeshBank::I() {
     return instance;
 }
 
-MeshBank::MeshBank() {
-    instance = this;
-}
-
 bool MeshBank::put(OBJElement &element) {
     GLuint EBO, vertexVBO, normalVBO, uvVBO;
 
@@ -196,5 +192,14 @@ bool MeshBank::put(OBJElement &element) {
         return false;
     }
     return true;
+}
+
+void MeshBank::instantiate() {
+    if (instance) free();
+    instance = new MeshBank;
+}
+
+void MeshBank::free() {
+    delete instance;
 }
 

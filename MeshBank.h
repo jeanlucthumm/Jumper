@@ -17,8 +17,9 @@ public:
     typedef size_t refID;
 
     static MeshBank *I();
+    static void instantiate();
+    static void free();
 
-    MeshBank();
 
     refID load(std::string path);
     const std::vector<const OBJElement> &get(refID id);
@@ -26,6 +27,7 @@ public:
 private:
     static MeshBank *instance;
 
+    MeshBank() = default;
     bool put(OBJElement &element);
 
     std::vector<std::vector<const OBJElement>> table;

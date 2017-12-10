@@ -13,8 +13,8 @@
 class MaterialBank {
 public:
     static MaterialBank * I();
-
-    MaterialBank();
+    static void instantiate();
+    static void free();
 
     bool parse(const std::string &path);
     const std::shared_ptr<const Material> &get(const std::string &name) const;
@@ -23,6 +23,7 @@ public:
 private:
     static MaterialBank *instance;
 
+    MaterialBank();
     GLuint putTexture(const std::string &path);
 
     std::unordered_map<std::string, std::shared_ptr<const Material>> table;
