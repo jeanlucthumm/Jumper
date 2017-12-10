@@ -30,5 +30,5 @@ std::list<Node *> DirLight::hit(const Ray &ray) {
 
 DirLight::DirLight(glm::vec3 direction, glm::vec3 color, size_t shaderArrayPos)
         : direction{direction}, ambient{color}, diffuse{color}, specular{color} {
-    tag = GLSL_ARRAY_NAME + "[" + std::to_string(shaderArrayPos) + "]";
+    tag = std::string{GLSL_ARRAY_NAME} + "[" + std::to_string(shaderArrayPos) + "]";
 }

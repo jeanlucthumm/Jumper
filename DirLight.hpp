@@ -12,9 +12,10 @@
 #include <unordered_set>
 #include <string>
 
+#define GLSL_ARRAY_NAME "dirLights"
+
 class DirLight : public Node {
 public:
-    constexpr std::string GLSL_ARRAY_NAME = "dirLights";
 
     DirLight(glm::vec3 direction,
              glm::vec3 color,
