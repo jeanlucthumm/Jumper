@@ -28,6 +28,7 @@ void PointLight::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm:
     glm::vec3 position = glm::vec3{parent * glm::vec4{0, 0, 0, 1}};
 
     for (auto &shader : shaders) {
+        shader->use();
         shader->put(tag + ".position", position);
         shader->put(tag + ".constant", constant);
         shader->put(tag + ".linear", linear);

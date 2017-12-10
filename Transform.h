@@ -32,7 +32,7 @@ public:
 
     void position(glm::vec3 direction);
 
-private:
+protected:
     glm::mat4 M;
     glm::mat4 base;
     glm::mat4 rotation, translation, scaletion;
