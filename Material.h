@@ -7,8 +7,10 @@
 
 
 #include "Shader.h"
+#include "GLinclude.h"
 #include <glm/vec3.hpp>
 #include <memory>
+#include <string>
 
 struct Material {
 public:
@@ -16,6 +18,13 @@ public:
     glm::vec3 kd;
     glm::vec3 ks;
     float shiny;
+
+    GLuint kaMap;
+    GLuint kdMap;
+    bool hasKaMap;
+    bool hasKdMap;
+    std::string kaMapPath;
+    std::string kdMapPath;
 
     void putYourself(std::shared_ptr<Shader> &shader);
 };

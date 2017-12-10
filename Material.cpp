@@ -5,6 +5,7 @@
 
 
 void Material::putYourself(std::shared_ptr<Shader> &shader) {
+    shader->use();
     shader->put("material.ambient", ka);
     shader->put("material.diffuse", kd);
     shader->put("material.specular", ks);
