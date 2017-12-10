@@ -100,6 +100,7 @@ CubeMap::CubeMap(const std::vector<std::string> &names, std::string directory, s
 
 void CubeMap::draw(const glm::mat4 &view, const glm::mat4 &projection) {
     glDepthMask(GL_FALSE);
+    glEnable(GL_CULL_FACE);
 
     glm::mat4 modView = glm::mat4{glm::mat3{view}};
 
@@ -110,6 +111,7 @@ void CubeMap::draw(const glm::mat4 &view, const glm::mat4 &projection) {
     glBindTexture(GL_TEXTURE_CUBE_MAP, texID);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glDepthMask(GL_TRUE);
+    glDisable(GL_CULL_FACE);
 }
 
 GLuint CubeMap::TextureID() {

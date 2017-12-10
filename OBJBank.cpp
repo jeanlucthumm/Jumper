@@ -30,8 +30,8 @@ OBJBank::refID OBJBank::load(std::string path) {
 
     std::string line, next;
     std::string id;
-    float x, y, z;  // vertex and normals
-    std::string f;
+    float x, y, z;
+    std::string f; // face line token
 
     float minX, minY, minZ;
     float maxX, maxY, maxZ;
@@ -39,6 +39,7 @@ OBJBank::refID OBJBank::load(std::string path) {
     maxX = maxY = maxZ = std::numeric_limits<float>::min();
 
     std::vector<glm::vec3> tempNormals;
+    std::vector<std::string> fs;    // face line tokens
 
     while (getline(in, line)) {
         std::stringstream ss{line};
@@ -92,10 +93,6 @@ OBJBank::refID OBJBank::load(std::string path) {
     std::cout << data.vertices.size() << " vertices ";
     std::cout << data.normals.size() << " normals ";
     std::cout << data.faces.size() << " indices " << std::endl;
-
-    for (int j = 0; j < 30; ++j) {
-        cout << glm::to_string(data.vertices[j]) << endl;
-    }
 
     table.push_back(std::move(data));
     return table.size() - 1;

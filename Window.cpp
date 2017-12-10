@@ -262,7 +262,6 @@ GLFWwindow *Window::makeGLFWWindow(int width, int height) {
 }
 
 void Window::setOpenGLPrefs() {
-    glEnable(GL_CULL_FACE); // skybox
     glCullFace(GL_BACK);
 
     glEnable(GL_DEPTH_TEST);
@@ -368,7 +367,8 @@ Window::Window(int width, int height)
             cubeMapShader
     );
 
-    OBJBank::refID bunnyID = OBJBank::load("obj/Jeep.obj");
+    OBJBank::refID bunnyID = OBJBank::load("obj/jeep.obj");
     graph.addChild(new Geometry{bunnyID, normalShader});
     graph.scale(glm::vec3{4.0});
+//    graph.translate(glm::vec3{0, 0, -600.0f});
 }
