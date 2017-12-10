@@ -9,14 +9,23 @@
 #include "Material.h"
 #include <memory>
 #include <string>
+#include <vector>
+#include <glm/vec3.hpp>
 
-class OBJElement {
-public:
+struct OBJElement {
     OBJElement() : VAO{0} {}
 
     GLuint VAO;
     std::shared_ptr<const Material> material;
     std::string name;
+
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> uvs;
+    std::vector<glm::vec3> normals;
+    std::vector<glm::vec3> indices;
+
+    glm::vec3 max;
+    glm::vec3 min;
 };
 
 
