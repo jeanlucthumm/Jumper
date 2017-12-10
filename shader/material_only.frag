@@ -95,7 +95,7 @@ void main() {
 
     // point lights
     for (int i = 0; i < POINTLIGHT_COUNT; i++) {
-        result += computeDirLight(pointLights[i], norm, Position, viewDir);
+        result += computePointLight(pointLights[i], norm, Position, viewDir);
     }
 
     color = vec4(result, 1.0);
