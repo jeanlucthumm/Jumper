@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "DirLight.hpp"
 
-
 void DirLight::attach(const std::shared_ptr<Shader> &shader) {
     shaders.insert(shader);
 }
@@ -16,6 +15,7 @@ void DirLight::detach(const std::shared_ptr<Shader> &shader) {
 void DirLight::draw(const glm::mat4 &parent, const glm::mat4 &view,
                     const glm::mat4 &projection) {
     for (auto &shader : shaders) {
+        shader->use();
         shader->put(tag + ".direction", direction);
         shader->put(tag + ".ambient", ambient);
         shader->put(tag + ".diffuse", diffuse);
@@ -24,7 +24,6 @@ void DirLight::draw(const glm::mat4 &parent, const glm::mat4 &view,
 }
 
 void DirLight::update() {
-    direction = glm::vec3{glm::rotate(glm::mat4{}, glm::radians(1.0f), glm::vec3{0, 0, 1}) * glm::vec4{direction, 1.0f}};
 }
 
 std::list<Node *> DirLight::hit(const Ray &ray) {
