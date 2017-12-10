@@ -57,7 +57,7 @@ void Geometry::draw(const glm::mat4 &parent,
                     const glm::mat4 &view,
                     const glm::mat4 &projection) {
     shader->use();
-    shader->put("model", parent);
+    shader->put("model", parent * base);
     shader->put("view", view);
     shader->put("projection", projection);
     shader->put("cameraPos", Window::Instance().CameraPos());

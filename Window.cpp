@@ -341,7 +341,7 @@ Window::Window(int width, int height)
         : width{width}, height{height}, orbitFlag{false}, transFlag{false}, dragFlag{false},
           started{false}, selected{nullptr},
           cam{
-                  glm::vec3{0.0f, 0.0f, 30.0f},
+                  glm::vec3{0.0f, 0.0f, 5.0f},
                   glm::vec3{0.0f, 0.0f, 0.0f},
                   glm::vec3{0.0f, 1.0f, 0.0f}
           } {
@@ -378,7 +378,7 @@ Window::Window(int width, int height)
             cubeMapShader
     );
 
-    OBJBank::refID carID = OBJBank::load("obj/jeep.obj");
+    OBJBank::refID carID = OBJBank::load("obj/truck.obj");
     Geometry *car = new Geometry{carID, materialOnlyShader, copperMaterial};
 
     auto *dirLight = new DirLight{
