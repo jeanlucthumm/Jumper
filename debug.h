@@ -8,6 +8,8 @@
 #include "util.h"
 #include <iostream>
 #include <glm/ext.hpp>
+#include <string>
+#include <vector>
 
 using namespace std;
 

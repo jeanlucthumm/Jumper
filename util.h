@@ -9,6 +9,7 @@
 #include <string>
 #include <glm/vec4.hpp>
 #include <glm/vec3.hpp>
+#include <vector>
 
 namespace util {
 
@@ -22,6 +23,8 @@ void after_error();
 
 glm::vec4 rgba_normalize(float r, float g, float b);
 
+void print(std::string_view name, const std::vector<glm::vec3> &vec);
+void print(std::string_view name, const std::vector<glm::vec2> &vec);
 }
 
 #endif //PA4_UTIL_H

@@ -1,9 +1,11 @@
 #include "util.h"
 #include "GLinclude.h"
 #include <iostream>
+#include <glm/ext.hpp>
 
 using std::cerr;
 using std::endl;
+using std::cout;
 
 void util::print_error(GLenum error) {
     cerr << error_string(error) << endl;
@@ -44,4 +46,18 @@ glm::vec4 util::rgba_normalize(float r, float g, float b) {
         b / 255.0f,
         1.0f
     };
+}
+
+void util::print(std::string_view name, const std::vector<glm::vec3> &vec) {
+    cout << "----[ " << name << " ]----" << endl;
+    for (auto &e : vec) {
+        cout << glm::to_string(e) << endl;
+    }
+}
+
+void util::print(std::string_view name, const std::vector<glm::vec2> &vec) {
+    cout << "----[ " << name << " ]----" << endl;
+    for (auto &e : vec) {
+        cout << glm::to_string(e) << endl;
+    }
 }
