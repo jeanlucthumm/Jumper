@@ -9,6 +9,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <boost/filesystem/path.hpp>
 
 class MaterialBank {
 public:

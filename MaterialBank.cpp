@@ -7,7 +7,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <cstring>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 MaterialBank *MaterialBank::instance;
 
@@ -33,7 +35,7 @@ bool MaterialBank::parse(const std::string &path) {
                   << ": " << std::strerror(errno) << std::endl;
         return false;
     }
-    // TODO adjust path of referenced materials
+    fs::path bpath = fs::path{path}.parent_path();
 
     std::string line;
     std::string token;
@@ -77,22 +79,29 @@ bool MaterialBank::parse(const std::string &path) {
         }
         else if (token == "map_Ka") {
             ss >> token;
-            if (!(current->kaMap = loadTexture(token))) {
-                continue; // id of 0 is not possible
-            }
             current->hasKaMap = true;
-            current->kaMapPath = token;
+            current->kaMapPath = (bpath / fs::path{token}).string();
         }
         else if (token == "map_Kd") {
             ss >> token;
-            if (!(current->kdMap = loadTexture(token))) {
-                continue; // id of 0 is not possible
-            }
             current->hasKdMap = true;
-            current->kdMapPath = token;
+            current->kdMapPath = (bpath / fs::path{token}).string();
         }
         else if (token == "newmtl") {
-            table[current->name] = std::move(current);
+            // load textures of old material
+            bool ok = true;
+            if (current->hasKaMap) {
+                current->kaMap = loadTexture(current->kaMapPath);
+                if (!current->kaMap) ok = false;
+            }
+            if (current->hasKdMap) {
+                current->kdMap = loadTexture(current->kdMapPath);
+                if (!current->kdMap) ok = false;
+            }
+
+            if (ok) {
+                table[current->name] = std::move(current);
+            }
             current = std::make_shared<Material>();
 
             ss >> token;
@@ -104,27 +113,18 @@ bool MaterialBank::parse(const std::string &path) {
     if (current != nullptr) {
         table[current->name] = std::move(current);
     }
+
     return true;
 }
 
 const std::shared_ptr<const Material> &MaterialBank::get(const std::string &name) {
     auto itr = table.find(name);
     if (itr == table.end()) {
+        std::cerr << "Could not find material, falling back to default: "
+                  << name << std::endl;
         return table.find("default")->second;
     }
-    auto &material = itr->second;
-
-    // lazy loading happens here
-    if (material->hasKaMap && material->kaMap == 0) {
-        GLuint id = loadTexture(material->kaMapPath);
-        if (!id) return table.find("default")->second;
-    }
-    if (material->hasKdMap && material->kdMap == 0) {
-        GLuint id = loadTexture(material->kdMapPath);
-        if (!id) return table.find("default")->second;
-    }
-
-    return material;
+    return itr->second;
 }
 
 bool MaterialBank::store(Material material) {

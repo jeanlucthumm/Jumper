@@ -15,29 +15,18 @@ int main() {
 //    }
     MaterialBank::instantiate();
     MaterialBank::I()->parse("obj/porsche/mod.mtl");
-    auto material = MaterialBank::I()->get("myglass");
+
+    auto material = MaterialBank::I()->get("02___Default");
 
     cout << material->name << endl;
-    cout << material->shiny << endl;
+    cout << glm::to_string(material->ka) << endl;
     cout << glm::to_string(material->kd) << endl;
     cout << glm::to_string(material->ks) << endl;
+    cout << material->shiny << endl;
+    cout << "ka id: " << material->kaMap << endl;
+    cout << "kd id: " << material->kdMap << endl;
+    cout << "has ka map: " << material->hasKaMap << endl;
     cout << "has kd map: " << material->hasKdMap << endl;
-    cout << "--------------" << endl;
-
-    auto b = MaterialBank::I()->get("02___Default");
-
-    cout << b->name << endl;
-    cout << b->shiny << endl;
-    cout << "has kd map: " << b->hasKdMap << endl;
-    cout << b->kdMapPath << endl;
-    cout << b->kdMap << endl;
-    cout << "--------------" << endl;
-
-    auto def = MaterialBank::I()->get("asdfasdf");
-
-    cout << def->name << endl;
-    cout << def->shiny << endl;
-    cout << glm::to_string(def->kd) << endl;
 
     MaterialBank::free();
     exit(EXIT_SUCCESS);
