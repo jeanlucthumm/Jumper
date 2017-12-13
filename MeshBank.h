@@ -20,9 +20,8 @@ public:
     static void instantiate();
     static void free();
 
-
     refID load(std::string path);
-    const std::vector<const OBJElement> &get(refID id);
+    const std::vector<OBJElement> &get(refID id);
 
 private:
     static MeshBank *instance;
@@ -30,7 +29,7 @@ private:
     MeshBank() = default;
     bool put(OBJElement &element);
 
-    std::vector<std::vector<const OBJElement>> table;
+    std::vector<std::vector<OBJElement>> table;
 };
 
 

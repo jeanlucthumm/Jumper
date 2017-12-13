@@ -9,6 +9,7 @@
 #include "DirLight.hpp"
 #include "PointLight.hpp"
 #include "Mover.hpp"
+#include "MaterialBank.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -354,8 +355,16 @@ Window::Window(int width, int height)
     if (!glfwWindow) throw std::runtime_error{"Could not make GLFW window"};
     setOpenGLPrefs();
     registerHandlers(glfwWindow);
+    instantiateSingletons();
+    setupScene();
+}
 
+void Window::instantiateSingletons() {
+    MaterialBank::instantiate();
+    MeshBank::instantiate();
+}
 
+void Window::setupScene() {
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
@@ -387,8 +396,8 @@ Window::Window(int width, int height)
             cubeMapShader
     );
 
-    MeshBank::refID carID = MeshBank::load("obj/sphere.obj");
-    MeshBank::refID sphereID = MeshBank::load("obj/sphere.obj");
+    MeshBank::refID carID = MeshBank::I()->load("obj/sphere.obj");
+    MeshBank::refID sphereID = MeshBank::I()->load("obj/sphere.obj");
 
 
     auto *dirLight = new DirLight{
@@ -418,5 +427,4 @@ Window::Window(int width, int height)
 
     Geometry *car = new Geometry{carID, materialOnlyShader, copperMaterial};
     graph.addChild(car);
-
 }

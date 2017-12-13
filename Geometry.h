@@ -25,7 +25,7 @@ public:
 private:
     GLuint VAO, EBO, VVBO, NVBO;
     MeshBank::refID dataID;
-    const std::vector<const OBJElement> &data;
+    const std::vector<OBJElement> &data;
 
     glm::mat4 base;
     std::shared_ptr<Shader> shader;

@@ -16,6 +16,7 @@ MaterialBank * MaterialBank::I() {
 MaterialBank::MaterialBank() {
     // insert default material
     auto *material = new Material;
+    material->name = "default";
     material->ka = glm::vec3{0.19125, 0.0735, 0.0225};
     material->kd = glm::vec3{0.780392, 0.568627, 0.113725};
     material->ks = glm::vec3{0.25677, 0.137622, 0.086014};

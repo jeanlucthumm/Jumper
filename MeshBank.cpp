@@ -15,9 +15,9 @@
 namespace fs = boost::filesystem;
 namespace alg = boost::algorithm;
 
-std::vector<const OBJElement> MeshBank::table;
+MeshBank *MeshBank::instance;
 
-const std::vector<const OBJElement> &MeshBank::get(refID objId) {
+const std::vector<OBJElement> &MeshBank::get(refID objId) {
     if (table.empty() || objId > table.size() - 1) {
         throw std::runtime_error{"OBJBank could not find objID"};
     }
@@ -33,7 +33,7 @@ MeshBank::refID MeshBank::load(std::string path) {
     }
     fs::path bpath{fs::path{path}.parent_path()};
 
-    std::vector<const OBJElement> object;
+    std::vector<OBJElement> object;
 
     std::string line, token;
     float x, y, z;
@@ -48,12 +48,11 @@ MeshBank::refID MeshBank::load(std::string path) {
     std::vector<std::string> splitRes;    // face line tokens
 
     OBJElement element;
+    element.material = MaterialBank::I()->get("default");
 
     while (getline(in, line)) {
         std::stringstream ss{line};
         ss >> token;
-
-        // TODO handle case of no 'o' command
 
         if (token == "mtllib") {
             ss >> token;
@@ -63,10 +62,12 @@ MeshBank::refID MeshBank::load(std::string path) {
             }
         }
         else if (token == "o") {
+            ss >> token;
             if (put(element)) {
                 element.min = glm::vec3{minX, minY, minZ};
                 element.max = glm::vec3{maxX, maxY, maxZ};
-                table.push_back(element);
+                element.name = token;
+                object.push_back(std::move(element));
             }
 
             element = OBJElement{};
@@ -108,7 +109,10 @@ MeshBank::refID MeshBank::load(std::string path) {
                 ss >> token;
                 splitRes.clear();
                 alg::split(splitRes, token, alg::is_any_of("/"));
-                if (splitRes.size() != 3) continue; // f xx/xx/xx
+                if (splitRes.size() != 3) {
+                    std::cerr << "invalid face: " << line << std::endl;
+                    continue;
+                } // f xx/xx/xx
 
                 // populate arrays
                 unsigned long index = std::stoul(splitRes[0]) - 1;
@@ -138,7 +142,7 @@ MeshBank::refID MeshBank::load(std::string path) {
     element.max = glm::vec3{maxX, maxY, maxZ};
     element.min = glm::vec3{minX, minY, minZ};
 
-    table.push_back(std::move(element));
+    table.push_back(std::move(object));
     return table.size() - 1;
 }
 

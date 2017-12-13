@@ -55,6 +55,8 @@ private:
     GLFWwindow *makeGLFWWindow(int width, int height);
     void setOpenGLPrefs();
     void registerHandlers(GLFWwindow *w);
+    void instantiateSingletons();
+    void setupScene();
 
     void display();
     void idle();
