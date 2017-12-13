@@ -72,6 +72,7 @@ MeshBank::refID MeshBank::load(std::string path) {
 
             element = OBJElement{};
             element.material = MaterialBank::I()->get("default");
+            element.name = token;
         }
         else if (token == "v") {
             ss >> x;
@@ -139,8 +140,13 @@ MeshBank::refID MeshBank::load(std::string path) {
         }
     }
 
-    element.max = glm::vec3{maxX, maxY, maxZ};
-    element.min = glm::vec3{minX, minY, minZ};
+    // last element still needs to be added
+    if (put(element)) {
+        element.min = glm::vec3{minX, minY, minZ};
+        element.max = glm::vec3{maxX, maxY, maxZ};
+        element.name = token;
+        object.push_back(std::move(element));
+    }
 
     unsigned long vertc, normc, uvc, facec;
     vertc = normc = uvc = facec = 0;
