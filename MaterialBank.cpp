@@ -4,6 +4,7 @@
 
 #include "MaterialBank.hpp"
 #include "lib/stb_image.h"
+#include "util.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -169,6 +170,13 @@ GLuint MaterialBank::loadTexture(const std::string &path) {
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);
+    auto error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cerr << "Error when loading texture: " << path << ": "
+                  << util::error_string(error) << std::endl;
+        return 0;
+    }
+
     stbi_image_free(image);
     textureTable[path] = id;
     return id;
