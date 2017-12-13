@@ -50,6 +50,7 @@ vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiny);
 
     vec3 ambient = light.ambient * material.ambient;
+//    vec3 ambient = vec3(0);
     vec3 diffuse = light.diffuse * diff * material.diffuse;
     vec3 specular = light.specular * spec * material.specular;
 
@@ -94,9 +95,9 @@ void main() {
     }
 
     // point lights
-    for (int i = 0; i < POINTLIGHT_COUNT; i++) {
-        result += computePointLight(pointLights[i], norm, Position, viewDir);
-    }
+//    for (int i = 0; i < POINTLIGHT_COUNT; i++) {
+//        result += computePointLight(pointLights[i], norm, Position, viewDir);
+//    }
 
     color = vec4(result, 1.0);
 }

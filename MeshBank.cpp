@@ -45,8 +45,9 @@ MeshBank::refID MeshBank::load(std::string path) {
     minX = minY = minZ = std::numeric_limits<float>::max();
     maxX = maxY = maxZ = std::numeric_limits<float>::min();
 
+    std::vector<glm::vec3> tempVertices;
     std::vector<glm::vec3> tempNormals;
-    std::vector<glm::vec3> tempUvs;
+    std::vector<glm::vec2> tempUvs;
     std::vector<std::string> splitRes;    // face line tokens
 
     OBJElement element;
@@ -88,25 +89,22 @@ MeshBank::refID MeshBank::load(std::string path) {
             if (z < minZ) minZ = z;
             else if (z > maxZ) maxZ = z;
 
-            element.vertices.emplace_back(x, y, z);
+            tempVertices.emplace_back(x, y, z);
         }
         else if (token == "vn") {
             ss >> x;
             ss >> y;
             ss >> z;
-            glm::vec3 normal{x, y, z};
 
-            tempNormals.push_back(glm::normalize(normal));
+            tempNormals.emplace_back(x, y, z);
+        }
+        else if (token == "vt") {
+            ss >> x;
+            ss >> y;
+
+            tempUvs.emplace_back(x, y);
         }
         else if (token == "f") {
-            // make sure we have enough room to align
-            if (element.normals.size() < element.vertices.size()) {
-                element.normals.resize(element.vertices.size());
-            }
-            if (element.uvs.size() < element.vertices.size()) {
-                element.uvs.resize(element.vertices.size());
-            }
-
             for (int i = 0; i < 3; i++) {
                 // split by /
                 ss >> token;
@@ -117,16 +115,15 @@ MeshBank::refID MeshBank::load(std::string path) {
                     continue;
                 } // f xx/xx/xx
 
-                // populate arrays
-                auto index = static_cast<unsigned int>(std::stoi(splitRes[0]) - 1);
-                element.indices.push_back(index);
+                int vindex = std::stoi(splitRes[0]) - 1;
+                element.vertices.push_back(tempVertices[vindex]);
                 if (!splitRes[1].empty()) {
                     int uvIndex = std::stoi(splitRes[1]) - 1;
-                    element.uvs[index] = tempUvs[uvIndex];
+                    element.uvs.push_back(tempUvs[uvIndex]);
                 }
                 if (!splitRes[2].empty()) {
                     int normIndex = std::stoi(splitRes[2]) - 1;
-                    element.normals[index] = tempNormals[normIndex];
+                    element.normals.push_back(tempNormals[normIndex]);
                 }
             }
 
@@ -181,7 +178,7 @@ bool MeshBank::put(OBJElement &element) {
     GLuint EBO, vertexVBO, normalVBO, uvVBO;
 
     glGenVertexArrays(1, &element.VAO);
-    glGenBuffers(1, &EBO);
+//    glGenBuffers(1, &EBO);
     glGenBuffers(1, &vertexVBO);
     glGenBuffers(1, &normalVBO);
     glGenBuffers(1, &uvVBO);
@@ -189,7 +186,7 @@ bool MeshBank::put(OBJElement &element) {
     auto vsize = static_cast<GLsizeiptr>(element.vertices.size() * sizeof(glm::vec3));
     auto nsize = static_cast<GLsizeiptr>(element.normals.size() * sizeof(glm::vec3));
     auto usize = static_cast<GLsizeiptr>(element.uvs.size() * sizeof(glm::vec2));
-    auto esize = static_cast<GLsizeiptr>(element.indices.size() * sizeof(unsigned int));
+//    auto esize = static_cast<GLsizeiptr>(element.indices.size() * sizeof(unsigned int));
 
     glBindVertexArray(element.VAO);
 
@@ -214,28 +211,14 @@ bool MeshBank::put(OBJElement &element) {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
 
     // indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, esize, &element.indices[0], GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, esize, &element.indices[0], GL_STATIC_DRAW);
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // DEBUG
-    for (auto &e : element.vertices) {
-        cout << glm::to_string(e) << endl;
-    }
-    cout << "-----" << endl;
-    for (auto &e : element.normals) {
-        cout << glm::to_string(e) << endl;
-    }
-    cout << "-----" << endl;
-    for (auto &e : element.uvs) {
-        cout << glm::to_string(e) << endl;
-    }
-    cout << "-----" << endl;
-    for (int i = 0; i < element.indices.size(); i += 3) {
-        cout << glm::to_string(element.vertices[i])
-             << glm::to_string(element.vertices[i + 1])
-             << glm::to_string(element.vertices[i + 2]) << endl;
-    }
+    util::print("vertices", element.vertices);
+    util::print("normals", element.normals);
+    util::print("uvs", element.uvs);
 
     auto error = glGetError();
     if (error != GL_NO_ERROR) {

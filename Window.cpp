@@ -272,8 +272,8 @@ void Window::setOpenGLPrefs() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
 
-    glClearColor(0.05f, 0.8f, 0.85f, 1.0f);
-//    glClearColor(0, 0, 0, 1);
+//    glClearColor(0.05f, 0.8f, 0.85f, 1.0f);
+    glClearColor(0, 0, 0, 1);
 
     glEnable(GL_LINE_SMOOTH);
     glLineWidth(1.0);
@@ -396,11 +396,11 @@ void Window::setupScene() {
             cubeMapShader
     );
 
-    MeshBank::refID cubeID = MeshBank::I()->load("obj/plane.obj");
+    MeshBank::refID cubeID = MeshBank::I()->load("obj/cube.obj");
 
 
     auto *dirLight = new DirLight{
-            glm::vec3{1.0, -1.0, -0.2},
+            glm::vec3{0, 1, 0},
             glm::vec3{0.5, 0.5, 0.5},
             0
     };
@@ -414,13 +414,13 @@ void Window::setupScene() {
             glm::vec3{0.2, 0.2, 0.2},
             glm::vec3{0.2, 0.2, 0.2},
     };
-    pointLight->attach(materialOnlyShader);
+//    pointLight->attach(materialOnlyShader);
 
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
     trans->translate(glm::vec3{10, 0, 0});
     trans->addChild(pointLight);
-    graph.addChild(trans);
+//    graph.addChild(trans);
 
     Geometry *car = new Geometry{cubeID, materialOnlyShader, copperMaterial};
     graph.addChild(car);

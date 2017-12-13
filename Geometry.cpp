@@ -55,8 +55,7 @@ void Geometry::draw(const glm::mat4 &parent,
         put(element.material);
         glBindVertexArray(element.VAO);
 
-        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(element.vertices.size()),
-                       GL_UNSIGNED_INT, nullptr);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(element.vertices.size()));
         glBindVertexArray(0);
     }
 }
