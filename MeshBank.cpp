@@ -142,7 +142,26 @@ MeshBank::refID MeshBank::load(std::string path) {
     element.max = glm::vec3{maxX, maxY, maxZ};
     element.min = glm::vec3{minX, minY, minZ};
 
+    unsigned long vertc, normc, uvc, facec;
+    vertc = normc = uvc = facec = 0;
+    for (auto &sub : object) {
+        vertc += sub.vertices.size();
+        normc += sub.normals.size();
+        uvc += sub.uvs.size();
+        facec += sub.indices.size();
+    }
+
+    using std::endl;
+    using std::cout;
+
+    cout << "Loaded object: " << path << endl;
+    cout << "\telements:\t" << object.size() << endl;
+    cout << "\tvertices:\t" << vertc << endl;
+    cout << "\tnormals:\t" << normc << endl;
+    cout << "\tindices:\t" << facec << endl;
+
     table.push_back(std::move(object));
+
     return table.size() - 1;
 }
 
