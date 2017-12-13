@@ -30,6 +30,7 @@ int main() {
     cout << b->shiny << endl;
     cout << "has kd map: " << b->hasKdMap << endl;
     cout << b->kdMapPath << endl;
+    cout << b->kdMap << endl;
     cout << "--------------" << endl;
 
     auto def = MaterialBank::I()->get("asdfasdf");

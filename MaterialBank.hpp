@@ -17,16 +17,17 @@ public:
     static void free();
 
     bool parse(const std::string &path);
-    const std::shared_ptr<const Material> &get(const std::string &name) const;
+    const std::shared_ptr<const Material> &get(const std::string &name);
     bool store(Material material);
 
 private:
     static MaterialBank *instance;
 
     MaterialBank();
-    GLuint putTexture(const std::string &path);
+    GLuint loadTexture(const std::string &path);
 
     std::unordered_map<std::string, std::shared_ptr<const Material>> table;
+    std::unordered_map<std::string, GLuint> textureTable;
 };
 
 

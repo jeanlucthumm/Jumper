@@ -3,6 +3,7 @@
 //
 
 #include "MaterialBank.hpp"
+#include "lib/stb_image.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -10,7 +11,7 @@
 
 MaterialBank *MaterialBank::instance;
 
-MaterialBank * MaterialBank::I() {
+MaterialBank *MaterialBank::I() {
     return instance;
 }
 
@@ -32,6 +33,7 @@ bool MaterialBank::parse(const std::string &path) {
                   << ": " << std::strerror(errno) << std::endl;
         return false;
     }
+    // TODO adjust path of referenced materials
 
     std::string line;
     std::string token;
@@ -75,7 +77,7 @@ bool MaterialBank::parse(const std::string &path) {
         }
         else if (token == "map_Ka") {
             ss >> token;
-            if (!(current->kaMap = putTexture(token))) {
+            if (!(current->kaMap = loadTexture(token))) {
                 continue; // id of 0 is not possible
             }
             current->hasKaMap = true;
@@ -83,7 +85,7 @@ bool MaterialBank::parse(const std::string &path) {
         }
         else if (token == "map_Kd") {
             ss >> token;
-            if (!(current->kdMap = putTexture(token))) {
+            if (!(current->kdMap = loadTexture(token))) {
                 continue; // id of 0 is not possible
             }
             current->hasKdMap = true;
@@ -105,12 +107,24 @@ bool MaterialBank::parse(const std::string &path) {
     return true;
 }
 
-const std::shared_ptr<const Material> &MaterialBank::get(const std::string &name) const {
+const std::shared_ptr<const Material> &MaterialBank::get(const std::string &name) {
     auto itr = table.find(name);
     if (itr == table.end()) {
         return table.find("default")->second;
     }
-    return itr->second;
+    auto &material = itr->second;
+
+    // lazy loading happens here
+    if (material->hasKaMap && material->kaMap == 0) {
+        GLuint id = loadTexture(material->kaMapPath);
+        if (!id) return table.find("default")->second;
+    }
+    if (material->hasKdMap && material->kdMap == 0) {
+        GLuint id = loadTexture(material->kdMapPath);
+        if (!id) return table.find("default")->second;
+    }
+
+    return material;
 }
 
 bool MaterialBank::store(Material material) {
@@ -120,11 +134,44 @@ bool MaterialBank::store(Material material) {
     std::string name = material.name;
     table[name] = std::make_shared<Material>(std::move(material));
     return true;
-    // TODO load textures if they have not been loaded
 }
 
-GLuint MaterialBank::putTexture(const std::string &path) {
-    return 5;
+GLuint MaterialBank::loadTexture(const std::string &path) {
+    auto itr = textureTable.find(path);
+    if (itr != textureTable.end()) {
+        return itr->second;
+    }
+
+    int w, h, channels;
+    unsigned char *image = stbi_load(path.c_str(), &w, &h, &channels, STBI_default);
+    if (!image) {
+        std::cerr << "Could not load texture: " << path << std::endl;
+        return 0;
+    }
+    std::cout << "Loaded texture: " << path << std::endl;
+
+    GLuint id;
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    if (channels == 3) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    }
+    else if (channels == 4) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+    }
+    else {
+        std::cerr << "Could not load texture: " << path
+                  << ": unsupported channel number: " << channels << std::endl;
+        return 0;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    stbi_image_free(image);
+    textureTable[path] = id;
+    return id;
 }
 
 void MaterialBank::instantiate() {
