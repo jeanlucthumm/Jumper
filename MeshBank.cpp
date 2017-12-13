@@ -12,6 +12,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
+#include "debug.h" // DEBUG
+
 namespace fs = boost::filesystem;
 namespace alg = boost::algorithm;
 
@@ -62,14 +64,14 @@ MeshBank::refID MeshBank::load(std::string path) {
             }
         }
         else if (token == "o") {
-            ss >> token;
-            if (put(element)) {
+            if (!element.vertices.empty() && put(element)) {
                 element.min = glm::vec3{minX, minY, minZ};
                 element.max = glm::vec3{maxX, maxY, maxZ};
                 element.name = token;
                 object.push_back(std::move(element));
             }
 
+            ss >> token;
             element = OBJElement{};
             element.material = MaterialBank::I()->get("default");
             element.name = token;
@@ -101,7 +103,7 @@ MeshBank::refID MeshBank::load(std::string path) {
             if (element.normals.size() < element.vertices.size()) {
                 element.normals.resize(element.vertices.size());
             }
-            if (element.uvs.size() < element.uvs.size()) {
+            if (element.uvs.size() < element.vertices.size()) {
                 element.uvs.resize(element.vertices.size());
             }
 
@@ -116,14 +118,14 @@ MeshBank::refID MeshBank::load(std::string path) {
                 } // f xx/xx/xx
 
                 // populate arrays
-                unsigned long index = std::stoul(splitRes[0]) - 1;
+                auto index = static_cast<unsigned int>(std::stoi(splitRes[0]) - 1);
                 element.indices.push_back(index);
                 if (!splitRes[1].empty()) {
-                    unsigned long uvIndex = std::stoul(splitRes[1]) - 1;
+                    int uvIndex = std::stoi(splitRes[1]) - 1;
                     element.uvs[index] = tempUvs[uvIndex];
                 }
                 if (!splitRes[2].empty()) {
-                    unsigned long normIndex = std::stoul(splitRes[2]) - 1;
+                    int normIndex = std::stoi(splitRes[2]) - 1;
                     element.normals[index] = tempNormals[normIndex];
                 }
             }
@@ -184,10 +186,10 @@ bool MeshBank::put(OBJElement &element) {
     glGenBuffers(1, &normalVBO);
     glGenBuffers(1, &uvVBO);
 
-    auto vsize = static_cast<GLsizeiptr>(element.vertices.size()) * sizeof(glm::vec3);
-    auto nsize = static_cast<GLsizeiptr>(element.normals.size()) * sizeof(glm::vec3);
-    auto usize = static_cast<GLsizeiptr>(element.uvs.size()) * sizeof(glm::vec2);
-    auto esize = static_cast<GLsizeiptr>(element.indices.size()) * sizeof(glm::vec3);
+    auto vsize = static_cast<GLsizeiptr>(element.vertices.size() * sizeof(glm::vec3));
+    auto nsize = static_cast<GLsizeiptr>(element.normals.size() * sizeof(glm::vec3));
+    auto usize = static_cast<GLsizeiptr>(element.uvs.size() * sizeof(glm::vec2));
+    auto esize = static_cast<GLsizeiptr>(element.indices.size() * sizeof(unsigned int));
 
     glBindVertexArray(element.VAO);
 
@@ -195,24 +197,45 @@ bool MeshBank::put(OBJElement &element) {
     glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
     glBufferData(GL_ARRAY_BUFFER, vsize, &element.vertices[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
 
     // normals
     glBindBuffer(GL_ARRAY_BUFFER, normalVBO);
     glBufferData(GL_ARRAY_BUFFER, nsize, &element.normals[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
+
+    glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(element.vertices.size()));
 
     // uvs
     glBindBuffer(GL_ARRAY_BUFFER, uvVBO);
     glBufferData(GL_ARRAY_BUFFER, usize, &element.uvs[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
 
     // indices
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, esize, &element.indices[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // DEBUG
+    for (auto &e : element.vertices) {
+        cout << glm::to_string(e) << endl;
+    }
+    cout << "-----" << endl;
+    for (auto &e : element.normals) {
+        cout << glm::to_string(e) << endl;
+    }
+    cout << "-----" << endl;
+    for (auto &e : element.uvs) {
+        cout << glm::to_string(e) << endl;
+    }
+    cout << "-----" << endl;
+    for (int i = 0; i < element.indices.size(); i += 3) {
+        cout << glm::to_string(element.vertices[i])
+             << glm::to_string(element.vertices[i + 1])
+             << glm::to_string(element.vertices[i + 2]) << endl;
+    }
 
     auto error = glGetError();
     if (error != GL_NO_ERROR) {

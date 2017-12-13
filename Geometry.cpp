@@ -7,6 +7,8 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/ext.hpp>
 
+#include "debug.h"
+
 Geometry::Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader,
                    std::shared_ptr<Material> material)
         : shader{std::move(shader)}, dataID{dataID},
@@ -49,13 +51,14 @@ void Geometry::draw(const glm::mat4 &parent,
     shader->put("projection", projection);
     shader->put("cameraPos", Window::Instance().CameraPos());
 
-    material->putYourself(shader);
+    for (auto &element: data) {
+        put(element.material);
+        glBindVertexArray(element.VAO);
 
-//    glBindVertexArray(VAO);
-//    glBindTexture(GL_TEXTURE_CUBE_MAP, Window::Instance().SkyboxTexture());
-//    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(data..size()),
-//                   GL_UNSIGNED_INT, nullptr);
-//    glBindVertexArray(0);
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(element.vertices.size()),
+                       GL_UNSIGNED_INT, nullptr);
+        glBindVertexArray(0);
+    }
 }
 
 void Geometry::update() {
@@ -64,5 +67,12 @@ void Geometry::update() {
 
 std::list<Node *> Geometry::hit(const Ray &ray) {
     return std::list<Node *>{};
+}
+
+void Geometry::put(const std::shared_ptr<const Material> &material) {
+    shader->put("material.ambient", material->ka);
+    shader->put("material.diffuse", material->kd);
+    shader->put("material.specular", material->ks);
+    shader->put("material.shiny", material->shiny);
 }
 

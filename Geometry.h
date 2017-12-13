@@ -23,6 +23,8 @@ public:
     std::list<Node *> hit(const Ray &ray) override;
 
 private:
+    void put(const std::shared_ptr<const Material> &material);
+
     GLuint VAO, EBO, VVBO, NVBO;
     MeshBank::refID dataID;
     const std::vector<OBJElement> &data;

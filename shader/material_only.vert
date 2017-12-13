@@ -2,6 +2,7 @@
 
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 normal;
+layout (location = 2) in vec3 uvs;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -9,7 +10,6 @@ uniform mat4 projection;
 
 out vec3 Position;
 out vec3 Normal;
-
 
 void main() {
     Position = position;

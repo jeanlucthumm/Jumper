@@ -20,9 +20,9 @@ struct OBJElement {
     std::string name;
 
     std::vector<glm::vec3> vertices;
-    std::vector<glm::vec3> uvs;
     std::vector<glm::vec3> normals;
-    std::vector<unsigned long> indices;
+    std::vector<glm::vec2> uvs;
+    std::vector<unsigned int> indices;
 
     glm::vec3 max;
     glm::vec3 min;
