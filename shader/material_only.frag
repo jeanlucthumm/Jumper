@@ -75,8 +75,8 @@ vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
         specular = light.specular * spec * material.specular;
     }
 
-    return (ambient + diffuse + specular);
-//    return diffuse + specular;
+//    return (ambient + diffuse + specular);
+    return diffuse + specular;
 }
 
 vec3 computePointLight(PointLight light, vec3 normal, vec3 position, vec3 viewDir) {
@@ -110,8 +110,8 @@ vec3 computePointLight(PointLight light, vec3 normal, vec3 position, vec3 viewDi
   ambient *= attenuation;
   diffuse *= attenuation;
   specular *= attenuation;
-  return (ambient + diffuse + specular);
-//  return (diffuse + specular);
+//  return (ambient + diffuse + specular);
+  return (diffuse + specular);
 }
 
 void main() {

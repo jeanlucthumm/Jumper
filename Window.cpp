@@ -12,6 +12,7 @@
 #include "Mover.hpp"
 #include "MaterialBank.hpp"
 #include "Road.hpp"
+#include "Grass.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -420,20 +421,9 @@ void Window::setupScene() {
     dirLight->attach(phongShader);
     graph.addChild(dirLight);
 
-    auto *pointLight = new PointLightObj{
-            cubeID, lightShader,
-            0, 0.0, 0.05, 0.0,
-            glm::vec3{0.3, 0.3, 0.3},
-            glm::vec3{0.3, 0.3, 0.3},
-            glm::vec3{0.3, 0.3, 0.3},
-    };
-    pointLight->attach(phongShader);
-
-    auto trans = new Mover;
-    trans->translate(glm::vec3{4, 0.2, 0});
-    trans->addChild(pointLight);
-    graph.addChild(trans);
-
-    Road *road = new Road{carID, roadID, phongShader, phongShader};
-    graph.addChild(road);
+//    Road *road = new Road{carID, roadID, phongShader, phongShader};
+//    graph.addChild(road);
+    Grass *grass = new Grass{cubeID, grassID, lightShader, phongShader};
+    grass->attach(phongShader);
+    graph.addChild(grass);
 }
