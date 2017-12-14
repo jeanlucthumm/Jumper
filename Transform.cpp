@@ -62,3 +62,7 @@ void Transform::position(glm::vec3 direction) {
     updateM();
 }
 
+glm::vec3 Transform::position() const {
+    return glm::vec3{translation * glm::vec4{0, 0, 0, 1}};
+}
+

@@ -353,7 +353,7 @@ Window::Window(int width, int height)
         : width{width}, height{height}, orbitFlag{false}, transFlag{false}, dragFlag{false},
           started{false}, selected{nullptr},
           cam{
-                  glm::vec3{0.0f, 0.0f, 5.0f},
+                  glm::vec3{8.482504, 6.766706, 5.124335},
                   glm::vec3{0.0f, 0.0f, 0.0f},
                   glm::vec3{0.0f, 1.0f, 0.0f}
           } {
@@ -376,7 +376,7 @@ void Window::setupScene() {
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
     auto phongShader = std::make_shared<Shader>("shader/simple_forward.vert",
-                                                       "shader/material_only.frag");
+                                                "shader/material_only.frag");
     auto noLightShader = std::make_shared<Shader>("shader/no_lighting.vert",
                                                   "shader/no_lighting.frag");
 
@@ -402,14 +402,14 @@ void Window::setupScene() {
 
     auto *dirLight = new DirLight{
             glm::vec3{1.0, -1.0, -0.2},
-            glm::vec3{0.7, 0.7, 0.7},
+            glm::vec3{1.0, 1.0, 1.0},
             0
     };
     dirLight->attach(phongShader);
     graph.addChild(dirLight);
 
     auto *pointLight = new PointLight{
-            0, 0.0, 0.1, 0.0,
+            0, 0.0, 0.05, 0.0,
             glm::vec3{0.3, 0.3, 0.3},
             glm::vec3{0.3, 0.3, 0.3},
             glm::vec3{0.3, 0.3, 0.3},

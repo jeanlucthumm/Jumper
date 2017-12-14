@@ -30,7 +30,9 @@ public:
 
     void scale(const glm::vec3 &mag);
 
-    void position(glm::vec3 direction);
+    void position(glm::vec3 position);
+
+    glm::vec3 position() const;
 
 protected:
     glm::mat4 M;
