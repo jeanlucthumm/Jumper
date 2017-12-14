@@ -7,6 +7,8 @@
 
 class Road : public Transform {
 public:
+    static constexpr float CAR_SPEED = 2.0f; // m/s
+
     Road(MeshBank::refID carID, MeshBank::refID segmentID,
          std::shared_ptr<Shader> carShader, std::shared_ptr<Shader> segmentShader);
 

@@ -1,6 +1,7 @@
 #include "Transform.h"
 #include "Road.hpp"
 #include <glm/glm.hpp>
+#include <random>
 
 void Road::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::mat4 &projection) {
     Transform::draw(parent, view, projection);
@@ -9,9 +10,20 @@ void Road::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::mat4 
 void Road::update(std::chrono::milliseconds delta) {
     Transform::update(delta);
 
-    carTrans->translate(glm::vec3{0.04, 0, 0});
-    if (carTrans->position().x > 5) {
-        carTrans->translate(glm::vec3{-10, 0, 0});
+    float millis = delta.count();
+    float distance = CAR_SPEED * (millis / 1000.0f);
+
+    if (left) {
+        carTrans->translate(glm::vec3{-distance, 0, 0});
+        if (carTrans->position().x < -5) {
+            carTrans->translate(glm::vec3{10, 0, 0});
+        }
+    }
+    else {
+        carTrans->translate(glm::vec3{distance, 0, 0});
+        if (carTrans->position().x > 5) {
+            carTrans->translate(glm::vec3{-10, 0, 0});
+        }
     }
 }
 
@@ -23,6 +35,8 @@ const Geometry *Road::Car() const {
     return car;
 }
 
+#include "debug.h"
+
 Road::Road(MeshBank::refID carID, MeshBank::refID segmentID, std::shared_ptr<Shader> carShader,
            std::shared_ptr<Shader> segmentShader)
         : car{new Geometry{carID, std::move(carShader)}},
@@ -33,10 +47,20 @@ Road::Road(MeshBank::refID carID, MeshBank::refID segmentID, std::shared_ptr<Sha
     addChild(carTrans);
     addChild(segTrans);
 
-    carTrans->rotate(90.0f, glm::vec3{0.0f, 0.1f, 0.0f});
+    // determine left or right and starting point
+    srand(static_cast<unsigned int>(time(NULL)));
+    left = static_cast<bool>(rand() % 2);
+
+    float pos = -4.0f + (8.0f / 100.0f) * static_cast<float>(rand() % 100);
+
     carTrans->translate(glm::vec3{0, 0.3, 0});
-
-    carTrans->translate(glm::vec3{-5, 0, 0});
-
     segTrans->scale(glm::vec3{5});
+    carTrans->translate(glm::vec3{pos, 0, 0});
+    if (left) {
+        carTrans->rotate(-90.0f, glm::vec3{0.0f, 0.1f, 0.0f});
+    }
+    else {
+        carTrans->rotate(90.0f, glm::vec3{0.0f, 0.1f, 0.0f});
+    }
+
 }
