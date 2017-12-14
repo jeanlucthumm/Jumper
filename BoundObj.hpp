@@ -13,6 +13,7 @@
 class BoundObj : public Node, public EventListener {
 public:
     BoundObj(const Bound &bound, std::shared_ptr<Shader> colorShader);
+    BoundObj(std::shared_ptr<Shader> colorShader);
 
     void draw(const glm::mat4 &parent,
               const glm::mat4 &view,
@@ -26,7 +27,8 @@ public:
     void receive(const Event &event) override;
     void receive(int key) override;
 
-    const Bound & getBound() const;
+    Bound getBound() const;
+    void setBound(const Bound &);
 
 private:
     GLuint VAO, VBO;
@@ -34,6 +36,7 @@ private:
     glm::vec3 color;
     Bound bound;
     std::shared_ptr<Shader> shader;
+    glm::mat4 lastModelMat;
 };
 
 #endif

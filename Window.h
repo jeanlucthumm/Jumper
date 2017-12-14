@@ -28,11 +28,12 @@ public:
     void start();
     void subscribe(int key, EventListener *listener);
 
-    static Window &Instance();
+    static Window &I();
     const glm::mat4 &View();
     const glm::mat4 &Projection();
     GLuint SkyboxTexture();
     glm::vec3 CameraPos();
+    const std::shared_ptr<Shader> &BoundShader();
 
     constexpr static float ROT_SCALE = 4.0f;
     constexpr static float TRANS_SCALE = 0.03f;
@@ -79,6 +80,7 @@ private:
     std::unordered_map<int, std::vector<EventListener *>> keyListeners;
     std::chrono::high_resolution_clock::time_point lastFrameTime;
     bool renderStarted;
+    std::shared_ptr<Shader> boundShader;
 };
 
 

@@ -9,7 +9,7 @@
 
 Geometry::Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader)
         : shader{std::move(shader)}, dataID{dataID},
-          data{MeshBank::I()->get(dataID)} {
+          data{MeshBank::I()->get(dataID)}, boundObj{Window::I().BoundShader()} {
 
     float minX, minY, minZ;
     float maxX, maxY, maxZ;
@@ -29,6 +29,9 @@ Geometry::Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader)
     glm::vec3 min{minX, minY, minZ};
     glm::vec3 max{maxX, maxY, maxZ};
 
+    Bound bound{min, max};
+    boundObj.setBound(bound);
+
     glm::vec3 center = (max + min) / 2.0f;
     glm::mat4 T = glm::translate(-center);
 
@@ -46,7 +49,7 @@ void Geometry::draw(const glm::mat4 &parent,
     shader->put("model", parent * base);
     shader->put("view", view);
     shader->put("projection", projection);
-    shader->put("cameraPos", Window::Instance().CameraPos());
+    shader->put("cameraPos", Window::I().CameraPos());
 
     for (auto &element: data) {
         glBindVertexArray(element.VAO);
@@ -54,6 +57,8 @@ void Geometry::draw(const glm::mat4 &parent,
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(element.vertices.size()));
         glBindVertexArray(0);
     }
+
+    boundObj.draw(parent * base, view, projection);
 }
 
 void Geometry::update(std::chrono::milliseconds delta) {
@@ -84,5 +89,9 @@ void Geometry::put(const std::shared_ptr<const Material> &material) {
         glActiveTexture(GL_TEXTURE0 + 1);
         glBindTexture(GL_TEXTURE_2D, material->kdMap);
     }
+}
+
+Bound Geometry::getBound() const {
+    return boundObj.getBound();
 }
 

@@ -26,7 +26,7 @@ using std::cout;
 
 static Window *instance;
 
-Window &Window::Instance() {
+Window &Window::I() {
     if (!instance) {
         throw std::runtime_error{"Tried to get Window instance when none instantiated"};
     }
@@ -395,6 +395,7 @@ void Window::setupScene() {
     auto noLightShader = std::make_shared<Shader>("shader/no_lighting.vert",
                                                   "shader/no_lighting.frag");
     auto colorShader = std::make_shared<Shader>("shader/color.vert", "shader/color.frag");
+    boundShader = colorShader;
 
     // Meshes
     MeshBank::refID cubeID = MeshBank::I()->load("obj/cube.obj");
@@ -415,21 +416,21 @@ void Window::setupScene() {
             cubeMapShader
     );
 
-    Bound bound{glm::vec3{-3}, glm::vec3{3}};
-    BoundObj *boundObj = new BoundObj{bound, colorShader};
-    graph.addChild(boundObj);
-
     auto *dirLight = new DirLight{
             glm::vec3{1.0, -1.0, -0.2},
             glm::vec3{1.0, 1.0, 1.0},
             0
     };
     dirLight->attach(phongShader);
-//    graph.addChild(dirLight);
+    graph.addChild(dirLight);
 
 //    Road *road = new Road{carID, roadID, phongShader, phongShader};
 //    graph.addChild(road);
     Grass *grass = new Grass{cubeID, grassID, lightShader, phongShader};
     grass->attach(phongShader);
-//    graph.addChild(grass);
+    graph.addChild(grass);
+}
+
+const std::shared_ptr<Shader> &Window::BoundShader() {
+    return boundShader;
 }

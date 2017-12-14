@@ -6,6 +6,8 @@
 #include "Material.h"
 #include "Shader.h"
 #include "MeshBank.h"
+#include "Bound.hpp"
+#include "BoundObj.hpp"
 #include <vector>
 #include <memory>
 
@@ -21,6 +23,7 @@ public:
 
     std::list<Node *> hit(const Ray &ray) override;
 
+    Bound getBound() const;
 private:
     void put(const std::shared_ptr<const Material> &material);
 
@@ -30,6 +33,7 @@ private:
 
     glm::mat4 base;
     std::shared_ptr<Shader> shader;
+    BoundObj boundObj;
 };
 
 #endif // GEOMETRY_H
