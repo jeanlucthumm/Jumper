@@ -28,7 +28,7 @@ std::list<Node *> BoundObj::hit(const Ray &ray) {
 }
 
 BoundObj::BoundObj(const Bound &bound, std::shared_ptr<Shader> colorShader)
-        : bound{bound}, shader{std::move(colorShader)}, enabled{true} {
+        : bound{bound}, shader{std::move(colorShader)}, enabled{false} {
     setPassive();
     Window::I().subscribe(GLFW_KEY_B, this);
 
@@ -57,7 +57,7 @@ Bound BoundObj::getBound() const {
 
 BoundObj::BoundObj(std::shared_ptr<Shader> colorShader)
         : bound{glm::vec3{}, glm::vec3{}},
-          shader{std::move(colorShader)}, enabled{true} {
+          shader{std::move(colorShader)}, enabled{false} {
     setPassive();
     Window::I().subscribe(GLFW_KEY_B, this);
 }

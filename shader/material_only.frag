@@ -27,7 +27,7 @@ struct PointLight {
     vec3 diffuse;
     vec3 specular;
 };
-#define POINTLIGHT_COUNT 2
+#define POINTLIGHT_COUNT 6
 uniform PointLight pointLights[POINTLIGHT_COUNT];
 
 struct Material {

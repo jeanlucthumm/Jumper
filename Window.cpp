@@ -388,6 +388,7 @@ void Window::instantiateSingletons() {
 }
 
 void Window::setupScene() {
+    srand(time(NULL));
     // Shaders
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");

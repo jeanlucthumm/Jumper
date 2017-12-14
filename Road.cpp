@@ -48,7 +48,6 @@ Road::Road(MeshBank::refID carID, MeshBank::refID segmentID, std::shared_ptr<Sha
     addChild(segTrans);
 
     // determine left or right and starting point
-    srand(static_cast<unsigned int>(time(NULL)));
     left = static_cast<bool>(rand() % 2);
 
     float pos = -4.0f + (8.0f / 100.0f) * static_cast<float>(rand() % 100);
