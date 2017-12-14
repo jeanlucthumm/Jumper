@@ -5,17 +5,16 @@
 #ifndef JUMPER_POINTLIGHT_HPP
 #define JUMPER_POINTLIGHT_HPP
 
-#include "Geometry.h"
+#include "Node.h"
+#include "Shader.h"
 #include <unordered_set>
+#include <memory>
 
 #define GLSL_ARRAY_NAME "pointLights"
 
-class PointLight : public Geometry {
+class PointLight : public Node{
 public:
-    PointLight(MeshBank::refID objID,
-               std::shared_ptr<Shader> shader,
-               std::shared_ptr<Material> material,
-               unsigned int shaderArrayPos,
+    PointLight(unsigned int shaderArrayPos,
                float constant, float linear, float quadratic,
                glm::vec3 ambient,
                glm::vec3 diffuse,

@@ -365,16 +365,17 @@ void Window::instantiateSingletons() {
 }
 
 void Window::setupScene() {
+    // Shaders
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
                                                        "shader/material_only.frag");
 
-    auto *lightData = new Material;
-    lightData->ka = glm::vec3{1.0, 1.0, 1.0};
-    std::shared_ptr<Material> lightMaterial{lightData};
-
-
+    // Meshes
+    MeshBank::refID cubeID = MeshBank::I()->load("obj/cube.obj");
+    MeshBank::refID carID = MeshBank::I()->load("obj/porsche/mod.obj");
+    MeshBank::refID grassID = MeshBank::I()->load("obj/grass.obj");
+    MeshBank::refID roadID = MeshBank::I()->load("obj/road.obj");
 
     skybox = std::make_unique<CubeMap>(
             std::vector<std::string>{
@@ -389,8 +390,6 @@ void Window::setupScene() {
             cubeMapShader
     );
 
-    MeshBank::refID cubeID = MeshBank::I()->load("obj/cube.obj");
-    MeshBank::refID carID = MeshBank::I()->load("obj/porsche/mod.obj");
 
     auto *dirLight = new DirLight{
             glm::vec3{1.0, -1.0, -0.2},
@@ -401,8 +400,7 @@ void Window::setupScene() {
     graph.addChild(dirLight);
 
     auto *pointLight = new PointLight{
-            cubeID, lightShader, lightMaterial, 0,
-            0.0, 0.25, 0.0,
+            0, 0.0, 0.25, 0.0,
             glm::vec3{0.2, 0.2, 0.2},
             glm::vec3{0.2, 0.2, 0.2},
             glm::vec3{0.2, 0.2, 0.2},
@@ -413,8 +411,9 @@ void Window::setupScene() {
     trans->scale(glm::vec3{0.06});
     trans->translate(glm::vec3{10, 0, 0});
     trans->addChild(pointLight);
+    trans->addChild(new Geometry{cubeID, lightShader});
     graph.addChild(trans);
 
-    Geometry *car = new Geometry{carID, materialOnlyShader};
+    Geometry *car = new Geometry{roadID, materialOnlyShader};
     graph.addChild(car);
 }

@@ -4,12 +4,10 @@
 
 #include "PointLight.hpp"
 
-PointLight::PointLight(MeshBank::refID objID, std::shared_ptr<Shader> shader,
-                       std::shared_ptr<Material> material, unsigned int shaderArrayPos,
+PointLight::PointLight(unsigned int shaderArrayPos,
                        float constant, float linear, float quadratic,
                        glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
-        : Geometry(objID, std::move(shader)),
-          constant{constant}, linear{linear}, quadratic{quadratic},
+        : constant{constant}, linear{linear}, quadratic{quadratic},
           ambient{ambient}, diffuse{diffuse}, specular{specular} {
     tag = std::string{GLSL_ARRAY_NAME} + "[" + std::to_string(shaderArrayPos) + "]";
 }
@@ -23,8 +21,6 @@ void PointLight::detach(const std::shared_ptr<Shader> &shader) {
 }
 
 void PointLight::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::mat4 &projection) {
-    Geometry::draw(parent, view, projection);
-
     glm::vec3 position = glm::vec3{parent * glm::vec4{0, 0, 0, 1}};
 
     for (auto &shader : shaders) {
@@ -39,10 +35,6 @@ void PointLight::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm:
     }
 }
 
-void PointLight::update() {
-    Geometry::update();
-}
+void PointLight::update() {}
 
-std::list<Node *> PointLight::hit(const Ray &ray) {
-    return Geometry::hit(ray);
-}
+std::list<Node *> PointLight::hit(const Ray &ray) { return std::list<Node *>{}; }
