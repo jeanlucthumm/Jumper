@@ -374,7 +374,7 @@ void Window::setupScene() {
     // Shaders
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
-    auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
+    auto materialOnlyShader = std::make_shared<Shader>("shader/simple_forward.vert",
                                                        "shader/material_only.frag");
     auto noLightShader = std::make_shared<Shader>("shader/no_lighting.vert",
                                                   "shader/no_lighting.frag");
@@ -417,11 +417,11 @@ void Window::setupScene() {
 
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
-    trans->translate(glm::vec3{10, 1, 0});
+    trans->translate(glm::vec3{10, 0.2, 0});
     trans->addChild(pointLight);
     trans->addChild(new Geometry{cubeID, lightShader});
     graph.addChild(trans);
 
-    Geometry *car = new Geometry{carID, noLightShader};
+    Geometry *car = new Geometry{carID, materialOnlyShader};
     graph.addChild(car);
 }

@@ -66,7 +66,14 @@ vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     else {
         diffuse = light.diffuse * diff * material.diffuse;
     }
-    vec3 specular = light.specular * spec * material.specular;
+    vec3 specular;
+    if (dot(normal, lightDir) < 0.0) {
+        // light on the wrong side
+        specular = vec3(0.0, 0.0, 0.0);
+    }
+    else {
+        specular = light.specular * spec * material.specular;
+    }
 
     return (ambient + diffuse + specular);
 }

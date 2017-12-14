@@ -13,9 +13,9 @@ out vec3 Normal;
 out vec2 Uv;
 
 void main() {
-    Position = position;
-    Normal = normal;
+    Position = vec3(model * vec4(position, 1));
+    Normal = mat3(transpose(inverse(model))) * normal;
     Uv = uv;
 
-    gl_Position = projection * view * model * vec4(position, 1.0);
+    gl_Position = projection * view * vec4(Position, 1.0);
 }
