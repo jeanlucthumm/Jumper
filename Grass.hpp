@@ -16,9 +16,8 @@ public:
     void detach(const std::shared_ptr<Shader> &shader);
 
 private:
-    PointLightObj *light;
+    PointLightObj *light1, *light2;
     Geometry *segment;
-    Transform *lightTrans;
     Transform *segTrans;
 };
 
