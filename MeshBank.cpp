@@ -12,8 +12,6 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 
-#include "debug.h" // DEBUG
-
 namespace fs = boost::filesystem;
 namespace alg = boost::algorithm;
 
@@ -44,6 +42,9 @@ MeshBank::refID MeshBank::load(std::string path) {
     float maxX, maxY, maxZ;
     minX = minY = minZ = std::numeric_limits<float>::max();
     maxX = maxY = maxZ = std::numeric_limits<float>::min();
+
+    unsigned long vertc, normc, uvc, facec;
+    vertc = normc = uvc = facec = 0;
 
     std::vector<glm::vec3> tempVertices;
     std::vector<glm::vec3> tempNormals;
@@ -90,6 +91,7 @@ MeshBank::refID MeshBank::load(std::string path) {
             else if (z > maxZ) maxZ = z;
 
             tempVertices.emplace_back(x, y, z);
+            vertc += 1;
         }
         else if (token == "vn") {
             ss >> x;
@@ -97,12 +99,14 @@ MeshBank::refID MeshBank::load(std::string path) {
             ss >> z;
 
             tempNormals.emplace_back(x, y, z);
+            normc += 1;
         }
         else if (token == "vt") {
             ss >> x;
             ss >> y;
 
             tempUvs.emplace_back(x, y);
+            uvc += 1;
         }
         else if (token == "f") {
             for (int i = 0; i < 3; i++) {
@@ -127,6 +131,14 @@ MeshBank::refID MeshBank::load(std::string path) {
                 }
             }
 
+            // align for OpenGL
+            if (element.normals.size() < element.vertices.size()) {
+                element.normals.resize(element.vertices.size());
+            }
+            if (element.uvs.size() < element.vertices.size()) {
+                element.uvs.resize(element.vertices.size());
+            }
+
             // check for ngon
             if (!ss.eof()) {
                 std::cerr << "Found ngon in file: " << path;
@@ -147,8 +159,6 @@ MeshBank::refID MeshBank::load(std::string path) {
         object.push_back(std::move(element));
     }
 
-    unsigned long vertc, normc, uvc, facec;
-    vertc = normc = uvc = facec = 0;
     for (auto &sub : object) {
         vertc += sub.vertices.size();
         normc += sub.normals.size();
@@ -163,7 +173,7 @@ MeshBank::refID MeshBank::load(std::string path) {
     cout << "\telements:\t" << object.size() << endl;
     cout << "\tvertices:\t" << vertc << endl;
     cout << "\tnormals:\t" << normc << endl;
-    cout << "\tindices:\t" << facec << endl;
+    cout << "\tuvs:\t" << uvc << endl;
 
     table.push_back(std::move(object));
 
@@ -214,11 +224,6 @@ bool MeshBank::put(OBJElement &element) {
 //    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 //    glBufferData(GL_ELEMENT_ARRAY_BUFFER, esize, &element.indices[0], GL_STATIC_DRAW);
 //    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-    // DEBUG
-    util::print("vertices", element.vertices);
-    util::print("normals", element.normals);
-    util::print("uvs", element.uvs);
 
     auto error = glGetError();
     if (error != GL_NO_ERROR) {

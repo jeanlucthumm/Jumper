@@ -397,10 +397,10 @@ void Window::setupScene() {
     );
 
     MeshBank::refID cubeID = MeshBank::I()->load("obj/cube.obj");
-
+    MeshBank::refID carID = MeshBank::I()->load("obj/porsche/mod.obj");
 
     auto *dirLight = new DirLight{
-            glm::vec3{0, 1, 0},
+            glm::vec3{1.0, -1.0, -0.2},
             glm::vec3{0.5, 0.5, 0.5},
             0
     };
@@ -414,14 +414,14 @@ void Window::setupScene() {
             glm::vec3{0.2, 0.2, 0.2},
             glm::vec3{0.2, 0.2, 0.2},
     };
-//    pointLight->attach(materialOnlyShader);
+    pointLight->attach(materialOnlyShader);
 
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
     trans->translate(glm::vec3{10, 0, 0});
     trans->addChild(pointLight);
-//    graph.addChild(trans);
+    graph.addChild(trans);
 
-    Geometry *car = new Geometry{cubeID, materialOnlyShader, copperMaterial};
+    Geometry *car = new Geometry{carID, materialOnlyShader, copperMaterial};
     graph.addChild(car);
 }

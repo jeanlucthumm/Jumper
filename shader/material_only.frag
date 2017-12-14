@@ -71,7 +71,7 @@ vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     return (ambient + diffuse + specular);
 }
 
-vec3 computePointLight_no_maps(PointLight light, vec3 normal, vec3 position, vec3 viewDir) {
+vec3 computePointLight(PointLight light, vec3 normal, vec3 position, vec3 viewDir) {
   vec3 lightDir = normalize(light.position - position);
   vec3 reflectDir = reflect(-lightDir, normal);
   float distance = length(light.position - position);
@@ -113,12 +113,12 @@ void main() {
 
     // directional lights
     for (int i = 0; i < DIRLIGHT_COUNT; i++) {
-        result += computeDirLight_no_maps(dirLights[i], norm, viewDir);
+        result += computeDirLight(dirLights[i], norm, viewDir);
     }
 
     // point lights
     for (int i = 0; i < POINTLIGHT_COUNT; i++) {
-        result += computePointLight_no_maps(pointLights[i], norm, Position, viewDir);
+        result += computePointLight(pointLights[i], norm, Position, viewDir);
     }
 
     color = vec4(result, 1.0);

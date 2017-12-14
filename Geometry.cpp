@@ -52,9 +52,8 @@ void Geometry::draw(const glm::mat4 &parent,
     shader->put("cameraPos", Window::Instance().CameraPos());
 
     for (auto &element: data) {
-        put(element.material);
         glBindVertexArray(element.VAO);
-
+        put(element.material);
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(element.vertices.size()));
         glBindVertexArray(0);
     }
@@ -73,5 +72,20 @@ void Geometry::put(const std::shared_ptr<const Material> &material) {
     shader->put("material.diffuse", material->kd);
     shader->put("material.specular", material->ks);
     shader->put("material.shiny", material->shiny);
+
+    shader->put("material.hasKaMap", material->hasKaMap);
+    shader->put("material.hasKdMap", material->hasKdMap);
+    shader->put("material.kaMap", (int) 0);
+    shader->put("material.kdMap", (int) 1);
+
+    if (material->hasKaMap) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, material->kaMap);
+    }
+
+    if (material->hasKdMap) {
+        glActiveTexture(GL_TEXTURE0 + 1);
+        glBindTexture(GL_TEXTURE_2D, material->kdMap);
+    }
 }
 
