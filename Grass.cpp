@@ -36,3 +36,7 @@ void Grass::detach(const std::shared_ptr<Shader> &shader) {
     light1->detach(shader);
     light2->detach(shader);
 }
+
+void Grass::update(std::chrono::milliseconds delta) {
+    Transform::update(delta);
+}
