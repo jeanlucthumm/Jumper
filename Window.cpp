@@ -69,7 +69,8 @@ void Window::handleKey(GLFWwindow *w, int key, int scancode, int action, int mod
                 float factor;
                 if (mods == GLFW_MOD_SHIFT) {
                     factor = 1.0f - SCALE_SCALE;
-                } else {
+                }
+                else {
                     factor = 1.0f + SCALE_SCALE;
                 }
                 graph.scale(glm::vec3{factor});
@@ -96,16 +97,19 @@ void Window::handleMouseButton(GLFWwindow *w, int button, int action, int mods) 
             std::list<Node *> hits = graph.hit(ray);
             if (hits.empty()) {
                 orbitFlag = true;
-                lastOrbitPoint = trackBallMapping(static_cast<float>(xpos), static_cast<float>(ypos));
+                lastOrbitPoint = trackBallMapping(static_cast<float>(xpos),
+                                                  static_cast<float>(ypos));
                 cam.save(); // use current state as reference for transformations
-            } else {
+            }
+            else {
                 // TODO pick the closest event listener instead of first
                 selected = dynamic_cast<EventListener *>(*(hits.begin()));
                 if (selected != nullptr) {
                     selected->receive(Event{Event::PRESS, ray});
                 }
             }
-        } else if (action == GLFW_RELEASE && mods != GLFW_MOD_SHIFT) {
+        }
+        else if (action == GLFW_RELEASE && mods != GLFW_MOD_SHIFT) {
             if (selected != nullptr) {
                 Ray ray = raycast(static_cast<float>(xpos), static_cast<float>(ypos));
                 selected->receive(Event{Event::RELEASE, ray});
@@ -113,10 +117,12 @@ void Window::handleMouseButton(GLFWwindow *w, int button, int action, int mods) 
             }
             orbitFlag = false;
             dragFlag = false;
-        } else if (action == GLFW_PRESS) {
+        }
+        else if (action == GLFW_PRESS) {
             transFlag = true;
             lastTransPoint = glm::vec2{xpos, ypos};
-        } else if (action == GLFW_RELEASE) {
+        }
+        else if (action == GLFW_RELEASE) {
             transFlag = false;
         }
     }
@@ -370,6 +376,8 @@ void Window::setupScene() {
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
                                                        "shader/material_only.frag");
+    auto noLightShader = std::make_shared<Shader>("shader/no_lighting.vert",
+                                                  "shader/no_lighting.frag");
 
     // Meshes
     MeshBank::refID cubeID = MeshBank::I()->load("obj/cube.obj");
@@ -393,7 +401,7 @@ void Window::setupScene() {
 
     auto *dirLight = new DirLight{
             glm::vec3{1.0, -1.0, -0.2},
-            glm::vec3{0.5, 0.5, 0.5},
+            glm::vec3{0.2, 0.2, 0.2},
             0
     };
     dirLight->attach(materialOnlyShader);
@@ -409,11 +417,11 @@ void Window::setupScene() {
 
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
-    trans->translate(glm::vec3{10, 0, 0});
+    trans->translate(glm::vec3{10, 1, 0});
     trans->addChild(pointLight);
     trans->addChild(new Geometry{cubeID, lightShader});
     graph.addChild(trans);
 
-    Geometry *car = new Geometry{roadID, materialOnlyShader};
+    Geometry *car = new Geometry{carID, noLightShader};
     graph.addChild(car);
 }

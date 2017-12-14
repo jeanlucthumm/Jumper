@@ -10,6 +10,8 @@
 #include <iostream>
 #include <boost/filesystem.hpp>
 
+#include "debug.h" // DEBUG
+
 namespace fs = boost::filesystem;
 
 MaterialBank *MaterialBank::instance;
@@ -30,6 +32,7 @@ MaterialBank::MaterialBank() {
 }
 
 bool MaterialBank::parse(const std::string &path) {
+    cout << "Parsing: " << path << endl; // DEBUG
     std::ifstream in{path};
     if (!in.is_open()) {
         std::cerr << "Could not open file: " << path
@@ -101,6 +104,7 @@ bool MaterialBank::parse(const std::string &path) {
             }
 
             if (ok) {
+                std::cout << "Loaded material: " << current->name << std::endl;
                 table[current->name] = std::move(current);
             }
             current = std::make_shared<Material>();
@@ -112,6 +116,7 @@ bool MaterialBank::parse(const std::string &path) {
 
     // last one isn't pushed
     if (current != nullptr) {
+        std::cout << "Loaded material: " << current->name << std::endl;
         table[current->name] = std::move(current);
     }
 
