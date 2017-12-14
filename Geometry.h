@@ -11,8 +11,7 @@
 
 class Geometry : public Node {
 public:
-    Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader,
-                 std::shared_ptr<Material> material);
+    Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader);
 
     void draw(const glm::mat4 &parent,
               const glm::mat4 &view,
@@ -31,7 +30,6 @@ private:
 
     glm::mat4 base;
     std::shared_ptr<Shader> shader;
-    std::shared_ptr<Material> material;
 };
 
 #endif // GEOMETRY_H

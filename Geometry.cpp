@@ -7,12 +7,9 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/ext.hpp>
 
-#include "debug.h"
-
-Geometry::Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader,
-                   std::shared_ptr<Material> material)
+Geometry::Geometry(MeshBank::refID dataID, std::shared_ptr<Shader> shader)
         : shader{std::move(shader)}, dataID{dataID},
-          data{MeshBank::I()->get(dataID)}, material{std::move(material)} {
+          data{MeshBank::I()->get(dataID)} {
 
     float minX, minY, minZ;
     float maxX, maxY, maxZ;

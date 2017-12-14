@@ -370,13 +370,6 @@ void Window::setupScene() {
     auto materialOnlyShader = std::make_shared<Shader>("shader/material_only.vert",
                                                        "shader/material_only.frag");
 
-    auto *copperData = new Material;
-    copperData->ka = glm::vec3{0.19125, 0.0735, 0.0225};
-    copperData->kd = glm::vec3{0.780392, 0.568627, 0.113725};
-    copperData->ks = glm::vec3{0.25677, 0.137622, 0.086014};
-    copperData->shiny = 0.1;
-    std::shared_ptr<Material> copperMaterial{copperData};
-
     auto *lightData = new Material;
     lightData->ka = glm::vec3{1.0, 1.0, 1.0};
     std::shared_ptr<Material> lightMaterial{lightData};
@@ -422,6 +415,6 @@ void Window::setupScene() {
     trans->addChild(pointLight);
     graph.addChild(trans);
 
-    Geometry *car = new Geometry{carID, materialOnlyShader, copperMaterial};
+    Geometry *car = new Geometry{carID, materialOnlyShader};
     graph.addChild(car);
 }

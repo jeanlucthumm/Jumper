@@ -8,7 +8,7 @@ PointLight::PointLight(MeshBank::refID objID, std::shared_ptr<Shader> shader,
                        std::shared_ptr<Material> material, unsigned int shaderArrayPos,
                        float constant, float linear, float quadratic,
                        glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
-        : Geometry(objID, std::move(shader), std::move(material)),
+        : Geometry(objID, std::move(shader)),
           constant{constant}, linear{linear}, quadratic{quadratic},
           ambient{ambient}, diffuse{diffuse}, specular{specular} {
     tag = std::string{GLSL_ARRAY_NAME} + "[" + std::to_string(shaderArrayPos) + "]";
