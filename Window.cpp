@@ -401,23 +401,23 @@ void Window::setupScene() {
 
     auto *dirLight = new DirLight{
             glm::vec3{1.0, -1.0, -0.2},
-            glm::vec3{0.2, 0.2, 0.2},
+            glm::vec3{0.7, 0.7, 0.7},
             0
     };
     dirLight->attach(materialOnlyShader);
     graph.addChild(dirLight);
 
     auto *pointLight = new PointLight{
-            0, 0.0, 0.25, 0.0,
-            glm::vec3{0.2, 0.2, 0.2},
-            glm::vec3{0.2, 0.2, 0.2},
-            glm::vec3{0.2, 0.2, 0.2},
+            0, 0.0, 0.1, 0.0,
+            glm::vec3{0.3, 0.3, 0.3},
+            glm::vec3{0.3, 0.3, 0.3},
+            glm::vec3{0.3, 0.3, 0.3},
     };
     pointLight->attach(materialOnlyShader);
 
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
-    trans->translate(glm::vec3{10, 0.2, 0});
+    trans->translate(glm::vec3{4, 0.2, 0});
     trans->addChild(pointLight);
     trans->addChild(new Geometry{cubeID, lightShader});
     graph.addChild(trans);
