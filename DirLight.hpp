@@ -26,7 +26,7 @@ public:
 
     void draw(const glm::mat4 &parent, const glm::mat4 &view,
               const glm::mat4 &projection) override;
-    void update() override;
+    void update(std::chrono::milliseconds delta) override;
     std::list<Node *> hit(const Ray &ray) override;
 
 private:

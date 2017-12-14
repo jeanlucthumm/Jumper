@@ -10,8 +10,8 @@
 
 class Mover : public Transform {
 public:
-    void update() override {
-        Transform::update();
+    void update(std::chrono::milliseconds delta) override {
+        Transform::update(delta);
         translate(glm::vec3(-0.01f, 0.00f, 0.0f));
     }
 };

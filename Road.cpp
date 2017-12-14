@@ -6,8 +6,8 @@ void Road::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::mat4 
     Transform::draw(parent, view, projection);
 }
 
-void Road::update() {
-    Transform::update();
+void Road::update(std::chrono::milliseconds delta) {
+    Transform::update(delta);
 
     carTrans->translate(glm::vec3{0.04, 0, 0});
     if (carTrans->position().x > 5) {

@@ -77,6 +77,8 @@ private:
     std::unique_ptr<CubeMap> skybox;
     EventListener *selected;
     std::unordered_map<int, std::vector<EventListener *>> keyListeners;
+    std::chrono::high_resolution_clock::time_point lastFrameTime;
+    bool renderStarted;
 };
 
 

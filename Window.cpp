@@ -299,7 +299,18 @@ void Window::display() {
 }
 
 void Window::idle() {
-    graph.update();
+    using namespace std::chrono;
+    if (renderStarted) {
+        auto now = high_resolution_clock::now();
+        auto delta = duration_cast<milliseconds>(now - lastFrameTime);
+        lastFrameTime = now;
+        graph.update(delta);
+    }
+    else {
+        lastFrameTime = high_resolution_clock::now();
+        renderStarted = true;
+        graph.update(milliseconds{0});
+    }
 }
 
 void Window::start() {
@@ -351,7 +362,7 @@ void Window::subscribe(int key, EventListener *listener) {
 
 Window::Window(int width, int height)
         : width{width}, height{height}, orbitFlag{false}, transFlag{false}, dragFlag{false},
-          started{false}, selected{nullptr},
+          started{false}, selected{nullptr}, renderStarted{false},
           cam{
                   glm::vec3{8.482504, 6.766706, 5.124335},
                   glm::vec3{0.0f, 0.0f, 0.0f},

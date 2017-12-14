@@ -15,9 +15,9 @@ void Transform::draw(const glm::mat4 &parent,
     }
 }
 
-void Transform::update() {
+void Transform::update(std::chrono::milliseconds delta) {
     for (auto child : children) {
-        child->update();
+        child->update(delta);
     }
 }
 

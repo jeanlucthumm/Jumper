@@ -23,7 +23,7 @@ void DirLight::draw(const glm::mat4 &parent, const glm::mat4 &view,
     }
 }
 
-void DirLight::update() {
+void DirLight::update(std::chrono::milliseconds delta) {
 };
 
 std::list<Node *> DirLight::hit(const Ray &ray) {

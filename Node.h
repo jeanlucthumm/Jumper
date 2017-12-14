@@ -4,6 +4,7 @@
 #include "Ray.h"
 #include <glm/mat4x4.hpp>
 #include <list>
+#include <chrono>
 
 class Node {
 public:
@@ -11,7 +12,7 @@ public:
                       const glm::mat4 &view,
                       const glm::mat4 &projection) = 0;
 
-    virtual void update() = 0;
+    virtual void update(std::chrono::milliseconds delta) = 0;
 
     virtual std::list<Node *> hit(const Ray &ray) = 0;
 };

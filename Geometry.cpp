@@ -56,7 +56,7 @@ void Geometry::draw(const glm::mat4 &parent,
     }
 }
 
-void Geometry::update() {
+void Geometry::update(std::chrono::milliseconds delta) {
 
 }
 
