@@ -4,6 +4,7 @@ out vec4 color;
 
 in vec3 Normal;
 in vec3 Position;
+in vec2 Uv;
 
 struct DirLight {
     vec3 direction;
@@ -34,6 +35,11 @@ struct Material {
     vec3 diffuse;
     vec3 specular;
     float shiny;
+
+    bool hasKaMap;
+    bool hasKdMap;
+    sampler2D kaMap;
+    sampler2D kdMap;
 };
 uniform Material material;
 
@@ -41,42 +47,58 @@ uniform vec3 cameraPos;
 
 vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     vec3 lightDir = normalize(-light.direction);
-
-    // diffuse
-    float diff = max(dot(normal, lightDir), 0.0);
-
-    // specular
     vec3 reflectDir = reflect(-lightDir, normal);
+
+    float diff = max(dot(normal, lightDir), 0.0);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiny);
 
-    vec3 ambient = light.ambient * material.ambient;
-//    vec3 ambient = vec3(0);
-    vec3 diffuse = light.diffuse * diff * material.diffuse;
+    vec3 ambient;
+    if (material.hasKaMap) {
+        ambient = light.ambient * vec3(texture2D(material.kaMap, Uv));
+    }
+    else {
+        ambient = light.ambient * material.ambient;
+    }
+    vec3 diffuse;
+    if (material.hasKdMap) {
+        diffuse = light.diffuse * diff * vec3(texture2D(material.kdMap, Uv));
+    }
+    else {
+        diffuse = light.diffuse * diff * material.diffuse;
+    }
     vec3 specular = light.specular * spec * material.specular;
 
     return (ambient + diffuse + specular);
 }
 
-vec3 computePointLight(PointLight light, vec3 normal, vec3 position, vec3 viewDir) {
+vec3 computePointLight_no_maps(PointLight light, vec3 normal, vec3 position, vec3 viewDir) {
   vec3 lightDir = normalize(light.position - position);
-
-  // diffuse
-  float diff = max(dot(normal, lightDir), 0.0);
-
-  // specular
   vec3 reflectDir = reflect(-lightDir, normal);
-  float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiny);
-
-  // attenuation
   float distance = length(light.position - position);
+
+  float diff = max(dot(normal, lightDir), 0.0);
+  float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shiny);
   float attenuation = 1.0 / (
         light.constant +
         light.linear * distance +
         light.quadratic * (distance * distance));
 
-  vec3 ambient = light.ambient * material.ambient;
-  vec3 diffuse = light.diffuse * diff * material.diffuse;
+  vec3 ambient;
+  if (material.hasKaMap) {
+      ambient = light.ambient * vec3(texture2D(material.kaMap, Uv));
+  }
+  else {
+      ambient = light.ambient * material.ambient;
+  }
+  vec3 diffuse;
+  if (material.hasKdMap) {
+      diffuse = light.diffuse * diff * vec3(texture2D(material.kdMap, Uv));
+  }
+  else {
+      diffuse = light.diffuse * diff * material.diffuse;
+  }
   vec3 specular = light.specular * spec * material.specular;
+
   ambient *= attenuation;
   diffuse *= attenuation;
   specular *= attenuation;
@@ -91,13 +113,13 @@ void main() {
 
     // directional lights
     for (int i = 0; i < DIRLIGHT_COUNT; i++) {
-        result += computeDirLight(dirLights[i], norm, viewDir);
+        result += computeDirLight_no_maps(dirLights[i], norm, viewDir);
     }
 
     // point lights
-//    for (int i = 0; i < POINTLIGHT_COUNT; i++) {
-//        result += computePointLight(pointLights[i], norm, Position, viewDir);
-//    }
+    for (int i = 0; i < POINTLIGHT_COUNT; i++) {
+        result += computePointLight_no_maps(pointLights[i], norm, Position, viewDir);
+    }
 
     color = vec4(result, 1.0);
 }
