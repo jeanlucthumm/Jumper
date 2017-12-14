@@ -8,6 +8,7 @@
 #include "Geometry.h"
 #include "DirLight.hpp"
 #include "PointLight.hpp"
+#include "PointLightObj.hpp"
 #include "Mover.hpp"
 #include "MaterialBank.hpp"
 #include "Road.hpp"
@@ -419,7 +420,8 @@ void Window::setupScene() {
     dirLight->attach(phongShader);
     graph.addChild(dirLight);
 
-    auto *pointLight = new PointLight{
+    auto *pointLight = new PointLightObj{
+            cubeID, lightShader,
             0, 0.0, 0.05, 0.0,
             glm::vec3{0.3, 0.3, 0.3},
             glm::vec3{0.3, 0.3, 0.3},
@@ -428,10 +430,8 @@ void Window::setupScene() {
     pointLight->attach(phongShader);
 
     auto trans = new Mover;
-    trans->scale(glm::vec3{0.06});
     trans->translate(glm::vec3{4, 0.2, 0});
     trans->addChild(pointLight);
-    trans->addChild(new Geometry{cubeID, lightShader});
     graph.addChild(trans);
 
     Road *road = new Road{carID, roadID, phongShader, phongShader};
