@@ -10,6 +10,7 @@
 #include "PointLight.hpp"
 #include "Mover.hpp"
 #include "MaterialBank.hpp"
+#include "Road.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -374,7 +375,7 @@ void Window::setupScene() {
     // Shaders
     auto cubeMapShader = std::make_shared<Shader>("shader/sky.vert", "shader/sky.frag");
     auto lightShader = std::make_shared<Shader>("shader/light.vert", "shader/light.frag");
-    auto materialOnlyShader = std::make_shared<Shader>("shader/simple_forward.vert",
+    auto phongShader = std::make_shared<Shader>("shader/simple_forward.vert",
                                                        "shader/material_only.frag");
     auto noLightShader = std::make_shared<Shader>("shader/no_lighting.vert",
                                                   "shader/no_lighting.frag");
@@ -404,7 +405,7 @@ void Window::setupScene() {
             glm::vec3{0.7, 0.7, 0.7},
             0
     };
-    dirLight->attach(materialOnlyShader);
+    dirLight->attach(phongShader);
     graph.addChild(dirLight);
 
     auto *pointLight = new PointLight{
@@ -413,7 +414,7 @@ void Window::setupScene() {
             glm::vec3{0.3, 0.3, 0.3},
             glm::vec3{0.3, 0.3, 0.3},
     };
-    pointLight->attach(materialOnlyShader);
+    pointLight->attach(phongShader);
 
     auto trans = new Mover;
     trans->scale(glm::vec3{0.06});
@@ -422,6 +423,6 @@ void Window::setupScene() {
     trans->addChild(new Geometry{cubeID, lightShader});
     graph.addChild(trans);
 
-    Geometry *car = new Geometry{carID, materialOnlyShader};
-    graph.addChild(car);
+    Road *road = new Road{carID, roadID, phongShader, phongShader};
+    graph.addChild(road);
 }
