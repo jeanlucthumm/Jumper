@@ -12,7 +12,9 @@ public:
     static constexpr float LIGHT_SPEED = 0.1f;
 
     Grass(MeshBank::refID pointLightID, MeshBank::refID segmentID,
-          std::shared_ptr<Shader> lightShader, std::shared_ptr<Shader> segmentShader);
+          std::shared_ptr<Shader> lightShader, std::shared_ptr<Shader> segmentShader,
+          unsigned int light1Pos,
+          unsigned int light2Pos);
 
     void attach(const std::shared_ptr<Shader> &shader);
     void detach(const std::shared_ptr<Shader> &shader);

@@ -1,16 +1,18 @@
 #include "Grass.hpp"
 
 Grass::Grass(MeshBank::refID pointLightID, MeshBank::refID segmentID,
-             std::shared_ptr<Shader> lightShader, std::shared_ptr<Shader> segmentShader)
+             std::shared_ptr<Shader> lightShader, std::shared_ptr<Shader> segmentShader,
+             unsigned int light1Pos,
+             unsigned int light2Pos)
         : light1{new PointLightObj{
         pointLightID, lightShader,
-        0, 0.0, 0.05, 0.0,
+        light1Pos, 0.0, 0.05, 0.0,
         glm::vec3{0.3, 0.3, 0.3},
         glm::vec3{0.3, 0.3, 0.3},
         glm::vec3{0.3, 0.3, 0.3},}},
           light2{new PointLightObj{
                   pointLightID, lightShader,
-                  1, 0.0, 0.05, 0.0,
+                  light2Pos, 0.0, 0.05, 0.0,
                   glm::vec3{0.3, 0.3, 0.3},
                   glm::vec3{0.3, 0.3, 0.3},
                   glm::vec3{0.3, 0.3, 0.3},}},

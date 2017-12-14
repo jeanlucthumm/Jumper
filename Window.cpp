@@ -15,6 +15,7 @@
 #include "Grass.hpp"
 #include "Bound.hpp"
 #include "BoundObj.hpp"
+#include "Game.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 #include <glm/ext.hpp>
@@ -403,19 +404,6 @@ void Window::setupScene() {
     MeshBank::refID grassID = MeshBank::I()->load("obj/grass.obj");
     MeshBank::refID roadID = MeshBank::I()->load("obj/road.obj");
 
-    skybox = std::make_unique<CubeMap>(
-            std::vector<std::string>{
-                    "right.jpg",
-                    "left.jpg",
-                    "top.jpg",
-                    "bottom.jpg",
-                    "back.jpg",
-                    "front.jpg"
-            },
-            "skybox/",
-            cubeMapShader
-    );
-
     auto *dirLight = new DirLight{
             glm::vec3{1.0, -1.0, -0.2},
             glm::vec3{1.0, 1.0, 1.0},
@@ -424,11 +412,8 @@ void Window::setupScene() {
     dirLight->attach(phongShader);
     graph.addChild(dirLight);
 
-//    Road *road = new Road{carID, roadID, phongShader, phongShader};
-//    graph.addChild(road);
-    Grass *grass = new Grass{cubeID, grassID, lightShader, phongShader};
-    grass->attach(phongShader);
-    graph.addChild(grass);
+    Game *game = new Game{carID, grassID, cubeID, roadID, phongShader, lightShader};
+    graph.addChild(game);
 }
 
 const std::shared_ptr<Shader> &Window::BoundShader() {
