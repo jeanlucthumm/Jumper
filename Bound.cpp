@@ -80,37 +80,28 @@ std::vector<glm::vec3> Bound::points() const {
 
     ret.push_back(min);
     ret.push_back(glm::vec3{max.x, min.y, min.z});
-
     ret.push_back(glm::vec3{max.x, min.y, min.z});
     ret.push_back(glm::vec3{max.x, max.y, min.z});
-
     ret.push_back(glm::vec3{max.x, max.y, min.z});
     ret.push_back(glm::vec3{min.x, max.y, min.z});
-
     ret.push_back(glm::vec3{min.x, max.y, min.z});
     ret.push_back(min);
 
+    ret.push_back(max);
+    ret.push_back(glm::vec3{max.x, min.y, max.z});
+    ret.push_back(glm::vec3{max.x, min.y, max.z});
+    ret.push_back(glm::vec3{min.x, min.y, max.z});
+    ret.push_back(glm::vec3{min.x, min.y, max.z});
+    ret.push_back(glm::vec3{min.x, max.y, max.z});
+    ret.push_back(glm::vec3{min.x, max.y, max.z});
+    ret.push_back(max);
+
     ret.push_back(min);
     ret.push_back(glm::vec3{min.x, min.y, max.z});
-
-    ret.push_back(glm::vec3{min.x, min.y, max.z});
-    ret.push_back(glm::vec3{min.x, max.y, max.z});
-
-    ret.push_back(glm::vec3{min.x, max.y, max.z});
-    ret.push_back(max);
-
-    ret.push_back(max);
-    ret.push_back(glm::vec3{max.x, min.y, max.z});
-
-    ret.push_back(glm::vec3{max.x, min.y, max.z});
-    ret.push_back(glm::vec3{min.x, min.y, max.z});
-
     ret.push_back(glm::vec3{max.x, min.y, min.z});
     ret.push_back(glm::vec3{max.x, min.y, max.z});
-
     ret.push_back(glm::vec3{max.x, max.y, min.z});
     ret.push_back(glm::vec3{max.x, max.y, max.z});
-
     ret.push_back(glm::vec3{min.x, max.y, min.z});
     ret.push_back(glm::vec3{min.x, max.y, max.z});
 

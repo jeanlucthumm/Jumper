@@ -1,9 +1,7 @@
 #define GLFW_INCLUDE_GLEXT
 
 #include "Window.h"
-#include "MaterialBank.hpp"
-
-#include "debug.h"
+#include <iostream>
 
 int main() {
     try {
