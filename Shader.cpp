@@ -115,6 +115,10 @@ void Shader::put(const std::string &tag, int value) {
     glUniform1i(glGetUniformLocation(id, tag.c_str()), value);
 }
 
+void Shader::put(const std::string &tag, bool value) {
+    glUniform1i(glGetUniformLocation(id, tag.c_str()), value);
+}
+
 void Shader::put(const std::string &tag, const glm::vec3 &value) {
     glUniform3f(glGetUniformLocation(id, tag.c_str()), value.x, value.y, value.z);
 }
@@ -149,3 +153,4 @@ Shader &Shader::operator=(Shader && other) noexcept {
     other.id = 0;
     return *this;
 }
+

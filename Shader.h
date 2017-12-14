@@ -24,6 +24,7 @@ public:
 
     void put(const std::string &tag, float value);
     void put(const std::string &tag, int value);
+    void put(const std::string &tag, bool value);
     void put(const std::string &tag, const glm::vec3 &value);
     void put(const std::string &tag, const glm::vec4 &value);
     void put(const std::string &tag, const glm::mat4 &value);
