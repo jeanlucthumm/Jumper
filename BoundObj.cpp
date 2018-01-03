@@ -20,14 +20,6 @@ void BoundObj::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::m
     lastModelMat = parent;
 }
 
-void BoundObj::update(std::chrono::milliseconds delta) {
-
-}
-
-std::list<Node *> BoundObj::hit(const Ray &ray) {
-    return std::list<Node *>{};
-}
-
 BoundObj::BoundObj(const Bound &bound, std::shared_ptr<Shader> colorShader)
         : bound{bound}, shader{std::move(colorShader)}, enabled{false} {
     setPassive();
