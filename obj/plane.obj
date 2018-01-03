@@ -1,13 +1,3 @@
-# Blender v2.79 (sub 0) OBJ File: ''
-# www.blender.org
-mtllib plane.mtl
-o Cube
-v 1.000000 0.097689 -0.999999
-v 0.999999 0.097689 1.000001
-v -1.000000 0.097689 1.000000
-v -1.000000 0.097689 -1.000000
-vn 0.0000 1.0000 0.0000
-usemtl Material
-s off
-f 4//1 2//1 1//1
-f 4//1 3//1 2//1
+version https://git-lfs.github.com/spec/v1
+oid sha256:556df348c27e75e7667f967454b2a4a1d05406d1b6acca48ca139eafdc7ef492
+size 279

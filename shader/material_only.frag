@@ -54,14 +54,14 @@ vec3 computeDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 
     vec3 ambient;
     if (material.hasKaMap) {
-        ambient = light.ambient * vec3(texture2D(material.kaMap, Uv));
+        ambient = light.ambient * vec3(texture(material.kaMap, Uv));
     }
     else {
         ambient = light.ambient * material.ambient;
     }
     vec3 diffuse;
     if (material.hasKdMap) {
-        diffuse = light.diffuse * diff * vec3(texture2D(material.kdMap, Uv));
+        diffuse = light.diffuse * diff * vec3(texture(material.kdMap, Uv));
     }
     else {
         diffuse = light.diffuse * diff * material.diffuse;
@@ -93,14 +93,14 @@ vec3 computePointLight(PointLight light, vec3 normal, vec3 position, vec3 viewDi
 
   vec3 ambient;
   if (material.hasKaMap) {
-      ambient = light.ambient * vec3(texture2D(material.kaMap, Uv));
+      ambient = light.ambient * vec3(texture(material.kaMap, Uv));
   }
   else {
       ambient = light.ambient * material.ambient;
   }
   vec3 diffuse;
   if (material.hasKdMap) {
-      diffuse = light.diffuse * diff * vec3(texture2D(material.kdMap, Uv));
+      diffuse = light.diffuse * diff * vec3(texture(material.kdMap, Uv));
   }
   else {
       diffuse = light.diffuse * diff * material.diffuse;

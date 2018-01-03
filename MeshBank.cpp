@@ -184,6 +184,8 @@ MeshBank *MeshBank::I() {
     return instance;
 }
 
+#include "debug.h"
+
 bool MeshBank::put(OBJElement &element) {
     GLuint EBO, vertexVBO, normalVBO, uvVBO;
 
@@ -192,6 +194,7 @@ bool MeshBank::put(OBJElement &element) {
     glGenBuffers(1, &vertexVBO);
     glGenBuffers(1, &normalVBO);
     glGenBuffers(1, &uvVBO);
+
 
     auto vsize = static_cast<GLsizeiptr>(element.vertices.size() * sizeof(glm::vec3));
     auto nsize = static_cast<GLsizeiptr>(element.normals.size() * sizeof(glm::vec3));
@@ -211,8 +214,6 @@ bool MeshBank::put(OBJElement &element) {
     glBufferData(GL_ARRAY_BUFFER, nsize, &element.normals[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
-
-    glDrawArrays(GL_POINTS, 0, static_cast<GLsizei>(element.vertices.size()));
 
     // uvs
     glBindBuffer(GL_ARRAY_BUFFER, uvVBO);
