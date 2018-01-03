@@ -3,6 +3,7 @@
 #include "Window.h"
 
 #include "debug.h""
+#include "glutil.hpp"
 
 void BoundObj::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::mat4 &projection) {
     if (!enabled) return;
@@ -64,18 +65,5 @@ BoundObj::BoundObj(std::shared_ptr<Shader> colorShader)
 
 void BoundObj::setBound(const Bound &bound) {
     this->bound = bound;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    auto points = bound.points();
-    auto size = static_cast<GLsizeiptr>(points.size() * sizeof(glm::vec3));
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, size, &points[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    VAO = glutil::makeStdVAO(bound.points());
 }

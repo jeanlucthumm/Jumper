@@ -31,7 +31,7 @@ public:
     void setBound(const Bound &);
 
 private:
-    GLuint VAO, VBO;
+    GLuint VAO;
     bool enabled;
     glm::vec3 color;
     Bound bound;
