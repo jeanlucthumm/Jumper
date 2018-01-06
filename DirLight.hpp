@@ -28,6 +28,7 @@ public:
               const glm::mat4 &projection) override;
     void update(std::chrono::milliseconds delta) override;
     std::list<Node *> hit(const Ray &ray) override;
+    std::list<Node *> hit(const Bound &bound, const glm::mat4 &parent) override;
 
 private:
     glm::vec3 direction;

@@ -38,3 +38,7 @@ void PointLight::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm:
 void PointLight::update(std::chrono::milliseconds delta) {}
 
 std::list<Node *> PointLight::hit(const Ray &ray) { return std::list<Node *>{}; }
+
+std::list<Node *> PointLight::hit(const Bound &bound, const glm::mat4 &parent) {
+    return std::list<Node *>{};
+}

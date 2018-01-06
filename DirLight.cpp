@@ -34,3 +34,7 @@ DirLight::DirLight(glm::vec3 direction, glm::vec3 color, size_t shaderArrayPos)
         : direction{direction}, ambient{color}, diffuse{color}, specular{color} {
     tag = std::string{GLSL_ARRAY_NAME} + "[" + std::to_string(shaderArrayPos) + "]";
 }
+
+std::list<Node *> DirLight::hit(const Bound &bound, const glm::mat4 &parent) {
+    return std::list<Node *>{};
+}
