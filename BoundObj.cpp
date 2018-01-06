@@ -21,7 +21,7 @@ void BoundObj::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::m
 }
 
 BoundObj::BoundObj(const Bound &bound, std::shared_ptr<Shader> colorShader)
-        : bound{bound}, shader{std::move(colorShader)}, enabled{false} {
+        : bound_{bound}, shader{std::move(colorShader)}, enabled{false} {
     setPassive();
     Window::I().subscribe(GLFW_KEY_B, this);
 
@@ -42,20 +42,20 @@ void BoundObj::receive(int key) {
     enabled = !enabled;
 }
 
-Bound BoundObj::getBound() const {
-    Bound transBound{bound};
+const Bound & BoundObj::getBound() const {
+    Bound transBound{bound_};
     transBound.transform(lastModelMat);
     return transBound;
 }
 
 BoundObj::BoundObj(std::shared_ptr<Shader> colorShader)
-        : bound{glm::vec3{}, glm::vec3{}},
+        : bound_{glm::vec3{}, glm::vec3{}},
           shader{std::move(colorShader)}, enabled{false} {
     setPassive();
     Window::I().subscribe(GLFW_KEY_B, this);
 }
 
 void BoundObj::setBound(const Bound &bound) {
-    this->bound = bound;
+    this->bound_ = bound;
     VAO = glutil::makeStdVAO(bound.points());
 }

@@ -20,6 +20,8 @@ public:
 
     std::list<Node *> hit(const Ray &ray) override;
 
+    std::list<Node *> hit(const Bound &bound, const glm::mat4 &parent) override;
+
     void addChild(Node *node);
 
     void removeChild(Node *node);
