@@ -16,12 +16,10 @@ void BoundObj::draw(const glm::mat4 &parent, const glm::mat4 &view, const glm::m
     glBindVertexArray(VAO);
     glDrawArrays(GL_LINES, 0, 24);
     glBindVertexArray(0);
-
-    lastModelMat = parent;
 }
 
 BoundObj::BoundObj(const Bound &bound, std::shared_ptr<Shader> colorShader)
-        : bound_{bound}, shader{std::move(colorShader)}, enabled{false} {
+        : bound{bound}, shader{std::move(colorShader)}, enabled{false} {
     setPassive();
     Window::I().subscribe(GLFW_KEY_B, this);
 
@@ -43,19 +41,17 @@ void BoundObj::receive(int key) {
 }
 
 const Bound & BoundObj::getBound() const {
-    Bound transBound{bound_};
-    transBound.transform(lastModelMat);
-    return transBound;
+    return bound;
 }
 
 BoundObj::BoundObj(std::shared_ptr<Shader> colorShader)
-        : bound_{glm::vec3{}, glm::vec3{}},
+        : bound{glm::vec3{}, glm::vec3{}},
           shader{std::move(colorShader)}, enabled{false} {
     setPassive();
     Window::I().subscribe(GLFW_KEY_B, this);
 }
 
 void BoundObj::setBound(const Bound &bound) {
-    this->bound_ = bound;
-    VAO = glutil::makeStdVAO(bound.points());
+    this->bound = bound;
+    VAO = glutil::makeStdVAO(bound.GLpoints()); // TODO just realod the points
 }

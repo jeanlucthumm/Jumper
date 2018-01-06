@@ -96,12 +96,7 @@ Bound Geometry::getBound() const {
 }
 
 std::list<Node *> Geometry::hit(const Bound &bound, const glm::mat4 &parent) {
-    // transform then enclose
-    Bound transBound = boundObj.getBound();
-    transBound.transform(parent);
-
-    Bound alignedBound;
-    alignedBound.grow(transBound);
+    Bound alignedBound = boundObj.getBound().align(parent);
 
     // intersect in global axis
     if (alignedBound.intersect(bound)) {

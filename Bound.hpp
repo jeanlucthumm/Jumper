@@ -7,25 +7,16 @@
 
 class Bound {
 public:
+    Bound() = default;
     Bound(glm::vec3 min, glm::vec3 max);
-    Bound(const Bound &other) = default;
 
-    void transform(const glm::mat4 &transformation);
-    void grow(const Bound &other);
-    void grow(const Bound &other,
-                   const glm::mat4 &transformation);
+    Bound align(const glm::mat4 &transformation) const;
+    /// \pre Both bounds are axis aligned
     bool intersect(const Bound &other) const;
-    bool intersect(const Bound &other,
-                   const glm::mat4 &transformation) const;
-    bool contains(glm::vec3 point) const;
-    std::vector<glm::vec3> points() const;
-
-    glm::vec3 Min() const;
-    glm::vec3 Max() const;
-
+    std::vector<glm::vec3> GLpoints() const;
+    std::vector<glm::vec3> corners() const;
 private:
-    glm::vec3 min;
-    glm::vec3 max;
+    glm::vec3 min, max;
 };
 
 #endif

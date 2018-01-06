@@ -32,7 +32,7 @@ private:
     GLuint VAO;
     bool enabled;
     glm::vec3 color;
-    Bound bound_;
+    Bound bound;
     std::shared_ptr<Shader> shader;
     glm::mat4 lastModelMat;
 };
