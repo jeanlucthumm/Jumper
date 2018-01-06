@@ -95,3 +95,22 @@ Bound Geometry::getBound() const {
     return boundObj.getBound();
 }
 
+std::list<Node *> Geometry::hit(const Bound &bound, const glm::mat4 &parent) {
+    // transform then enclose
+    Bound transBound = boundObj.getBound();
+    transBound.transform(parent);
+
+    Bound alignedBound;
+    alignedBound.grow(transBound);
+
+    // intersect in global axis
+    if (alignedBound.intersect(bound)) {
+        boundObj.setActive();
+        return std::list<Node *>{this};
+    }
+    else {
+        boundObj.setPassive();
+        return std::list<Node *>{};
+    }
+}
+

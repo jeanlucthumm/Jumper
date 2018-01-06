@@ -23,6 +23,8 @@ public:
 
     std::list<Node *> hit(const Ray &ray) override;
 
+    std::list<Node *> hit(const Bound &bound, const glm::mat4 &parent) override;
+
     Bound getBound() const;
 private:
     void put(const std::shared_ptr<const Material> &material);

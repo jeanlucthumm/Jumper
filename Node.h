@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include "Ray.h"
+#include "Bound.hpp"
 #include <glm/mat4x4.hpp>
 #include <list>
 #include <chrono>
@@ -15,6 +16,9 @@ public:
     virtual void update(std::chrono::milliseconds delta) = 0;
 
     virtual std::list<Node *> hit(const Ray &ray) = 0;
+
+    virtual std::list<Node *> hit(const Bound &bound,
+                                  const glm::mat4 &parent) = 0;
 };
 
 #endif
