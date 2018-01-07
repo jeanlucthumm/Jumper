@@ -68,8 +68,9 @@ glm::vec3 Transform::position() const {
 
 std::list<Node *> Transform::hit(const Bound &bound, const glm::mat4 &parent) {
     std::list<Node *> all;
+    glm::mat4 childMatrix = parent * M;
     for (auto child : children) {
-        all.splice(all.end(), child->hit(bound, parent));
+        all.splice(all.end(), child->hit(bound, childMatrix));
     }
     return all;
 }
