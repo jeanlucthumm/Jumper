@@ -74,3 +74,7 @@ std::list<Node *> Transform::hit(const Bound &bound, const glm::mat4 &parent) {
     return all;
 }
 
+const glm::mat4 &Transform::matrix() const {
+    return M;
+}
+

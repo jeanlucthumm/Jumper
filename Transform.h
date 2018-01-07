@@ -36,6 +36,8 @@ public:
 
     glm::vec3 position() const;
 
+    const glm::mat4 & matrix() const;
+
 protected:
     glm::mat4 M;
     glm::mat4 base;

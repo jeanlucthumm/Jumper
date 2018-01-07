@@ -15,6 +15,8 @@ public:
     void receive(const Event &event) override;
     void receive(int key) override;
 
+    void update(std::chrono::milliseconds delta) override;
+
 private:
     Geometry *player;
     Transform *playerTrans;

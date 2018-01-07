@@ -66,3 +66,7 @@ void Game::receive(int key) {
         playerLoc = 0;
     }
 }
+
+void Game::update(std::chrono::milliseconds delta) {
+
+}
