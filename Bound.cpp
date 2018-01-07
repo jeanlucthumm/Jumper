@@ -52,7 +52,7 @@ Bound Bound::align(const glm::mat4 &transformation) const {
 
     glm::vec3 amin, amax;
     amin.x = amin.y = amin.z = std::numeric_limits<float>::max();
-    amax.x = amax.y = amax.z = std::numeric_limits<float>::min();
+    amax.x = amax.y = amax.z = std::numeric_limits<float>::lowest();
 
     for (auto &corner : corns) {
         amin.x = std::min(amin.x, corner.x);
@@ -85,4 +85,16 @@ std::vector<glm::vec3> Bound::corners() const {
     return ret;
 }
 
-#pragma clang diagnostic pop
+glm::vec3 Bound::Min() const {
+    return min;
+}
+
+glm::vec3 Bound::Max() const {
+    return max;
+}
+
+// DEBUG
+#include "debug.h"
+void Bound::print() const {
+    cout << glm::to_string(min) << " | " << glm::to_string(max) << endl;
+}

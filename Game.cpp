@@ -5,7 +5,8 @@
 
 Game::Game(MeshBank::refID carID, MeshBank::refID grassID, MeshBank::refID cubeID,
            MeshBank::refID roadID, std::shared_ptr<Shader> standard,
-           std::shared_ptr<Shader> light) {
+           std::shared_ptr<Shader> light)
+        : size{0}, playerLoc{0} {
     player = new Geometry{cubeID, standard};
     playerTrans = new Transform;
     playerTrans->addChild(player);
@@ -60,6 +61,13 @@ void Game::receive(int key) {
     if (playerLoc < size - 1) {
         playerTrans->translate(glm::vec3{0, 0, -WIDTH});
         playerLoc++;
+
+        Bound playerAABB = player->getBound().align(playerTrans->matrix());
+        playerAABB.print(); // DEBUG
+
+        for (auto child : children) {
+            child->hit(playerAABB, glm::mat4{});
+        }
     }
     else {
         playerTrans->translate(glm::vec3{0, 0, WIDTH * (size - 1)});
@@ -68,5 +76,6 @@ void Game::receive(int key) {
 }
 
 void Game::update(std::chrono::milliseconds delta) {
+    Transform::update(delta);
 
 }

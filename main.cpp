@@ -1,6 +1,7 @@
 #define GLFW_INCLUDE_GLEXT
 
 #include "Window.h"
+#include "debug.h"
 #include <iostream>
 
 int main() {

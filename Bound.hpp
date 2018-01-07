@@ -15,6 +15,13 @@ public:
     bool intersect(const Bound &other) const;
     std::vector<glm::vec3> GLpoints() const;
     std::vector<glm::vec3> corners() const;
+
+    glm::vec3 Min() const;
+    glm::vec3 Max() const;
+
+    // DEBUG
+    void print() const;
+
 private:
     glm::vec3 min, max;
 };
