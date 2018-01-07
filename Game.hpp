@@ -4,7 +4,7 @@
 #include "Transform.h"
 #include "Geometry.h"
 
-class Game : public Transform {
+class Game : public Transform, EventListener {
 public:
     Game(MeshBank::refID carID, MeshBank::refID grassID, MeshBank::refID cubeID,
              MeshBank::refID roadID, std::shared_ptr<Shader> standard,
@@ -12,11 +12,14 @@ public:
 
     static constexpr float WIDTH = 1.2f;
 
-private:
-    std::vector<Geometry *> cars;
+    void receive(const Event &event) override;
+    void receive(int key) override;
 
+private:
     Geometry *player;
     Transform *playerTrans;
+    int size;
+    int playerLoc;
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "Grass.hpp"
 #include "Road.hpp"
+#include "Window.h"
 
 Game::Game(MeshBank::refID carID, MeshBank::refID grassID, MeshBank::refID cubeID,
            MeshBank::refID roadID, std::shared_ptr<Shader> standard,
@@ -48,4 +49,20 @@ Game::Game(MeshBank::refID carID, MeshBank::refID grassID, MeshBank::refID cubeI
     addChild(grass);
 
     translate(glm::vec3{0, 0, WIDTH * counter / 2});
+    size = counter;
+
+    Window::I().subscribe(GLFW_KEY_SPACE, this);
+}
+
+void Game::receive(const Event &event) {}
+
+void Game::receive(int key) {
+    if (playerLoc < size - 1) {
+        playerTrans->translate(glm::vec3{0, 0, -WIDTH});
+        playerLoc++;
+    }
+    else {
+        playerTrans->translate(glm::vec3{0, 0, WIDTH * (size - 1)});
+        playerLoc = 0;
+    }
 }
