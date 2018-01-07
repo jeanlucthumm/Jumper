@@ -413,10 +413,14 @@ void Window::setupScene() {
     dirLight->attach(phongShader);
     graph.addChild(dirLight);
 
-    Game *game = new Game{carID, grassID, cubeID, roadID, phongShader, lightShader};
+    game = new Game{carID, grassID, cubeID, roadID, phongShader, lightShader};
     graph.addChild(game);
 }
 
 const std::shared_ptr<Shader> &Window::BoundShader() {
     return boundShader;
+}
+
+Game *Window::getGame() {
+    return game;
 }

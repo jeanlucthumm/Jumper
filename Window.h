@@ -11,6 +11,7 @@
 #include "CubeMap.h"
 #include "Ray.h"
 #include "EventListener.h"
+#include "Game.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -34,6 +35,7 @@ public:
     GLuint SkyboxTexture();
     glm::vec3 CameraPos();
     const std::shared_ptr<Shader> &BoundShader();
+    Game *getGame();
 
     constexpr static float ROT_SCALE = 4.0f;
     constexpr static float TRANS_SCALE = 0.03f;
@@ -81,6 +83,7 @@ private:
     std::chrono::high_resolution_clock::time_point lastFrameTime;
     bool renderStarted;
     std::shared_ptr<Shader> boundShader;
+    Game *game;
 };
 
 
