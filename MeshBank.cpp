@@ -42,7 +42,7 @@ MeshBank::refID MeshBank::load(std::string path) {
     float minX, minY, minZ;
     float maxX, maxY, maxZ;
     minX = minY = minZ = std::numeric_limits<float>::max();
-    maxX = maxY = maxZ = std::numeric_limits<float>::min();
+    maxX = maxY = maxZ = std::numeric_limits<float>::lowest();
 
     unsigned long vertc, normc, uvc, facec;
     vertc = normc = uvc = facec = 0;
