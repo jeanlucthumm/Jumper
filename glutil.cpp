@@ -1,13 +1,10 @@
 #include "glutil.hpp"
 
 GLuint glutil::makeStdVAO(const std::vector<glm::vec3> &vertices) {
-    GLuint VAO, vertexVBO, normalVBO, uvVBO;
+    GLuint VAO, vertexVBO;
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &vertexVBO);
-    glGenBuffers(1, &normalVBO);
-    glGenBuffers(1, &uvVBO);
-
 
     auto vsize = static_cast<GLsizeiptr>(vertices.size() * sizeof(glm::vec3));
 
@@ -24,13 +21,11 @@ GLuint glutil::makeStdVAO(const std::vector<glm::vec3> &vertices) {
 
 GLuint glutil::makeStdVAO(const std::vector<glm::vec3> &vertices,
                           const std::vector<glm::vec3> &normals) {
-    GLuint VAO, vertexVBO, normalVBO, uvVBO;
+    GLuint VAO, vertexVBO, normalVBO;
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &vertexVBO);
     glGenBuffers(1, &normalVBO);
-    glGenBuffers(1, &uvVBO);
-
 
     auto vsize = static_cast<GLsizeiptr>(vertices.size() * sizeof(glm::vec3));
     auto nsize = static_cast<GLsizeiptr>(normals.size() * sizeof(glm::vec3));
