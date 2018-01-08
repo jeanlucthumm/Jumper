@@ -29,12 +29,14 @@ public:
     void setBound(const Bound &);
 
 private:
-    GLuint VAO;
+    GLuint VAO, VBO;
     bool enabled;
     glm::vec3 color;
     Bound bound;
     std::shared_ptr<Shader> shader;
-    glm::mat4 lastModelMat;
+    bool initialized;
+
+    void makeVAO(const std::vector<glm::vec3> &vertices);
 };
 
 #endif
