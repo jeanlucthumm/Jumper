@@ -92,9 +92,3 @@ glm::vec3 Bound::Min() const {
 glm::vec3 Bound::Max() const {
     return max;
 }
-
-// DEBUG
-#include "debug.h"
-void Bound::print() const {
-    cout << glm::to_string(min) << " | " << glm::to_string(max) << endl;
-}

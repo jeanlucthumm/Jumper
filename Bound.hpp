@@ -19,9 +19,6 @@ public:
     glm::vec3 Min() const;
     glm::vec3 Max() const;
 
-    // DEBUG
-    void print() const;
-
 private:
     glm::vec3 min, max;
 };

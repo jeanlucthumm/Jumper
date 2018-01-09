@@ -61,13 +61,6 @@ void Game::receive(int key) {
     if (playerLoc < size - 1) {
         playerTrans->translate(glm::vec3{0, 0, -WIDTH});
         playerLoc++;
-
-        Bound playerAABB = player->getBound().align(playerTrans->matrix());
-        playerAABB.print(); // DEBUG
-
-        for (auto child : children) {
-            child->hit(playerAABB, glm::mat4{});
-        }
     }
     else {
         playerTrans->translate(glm::vec3{0, 0, WIDTH * (size - 1)});
@@ -78,4 +71,9 @@ void Game::receive(int key) {
 void Game::update(std::chrono::milliseconds delta) {
     Transform::update(delta);
 
+    Bound playerAABB = player->getBound().align(playerTrans->matrix());
+
+    for (auto child : children) {
+        child->hit(playerAABB, glm::mat4{});
+    }
 }
